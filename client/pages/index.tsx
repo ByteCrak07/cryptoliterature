@@ -1,10 +1,12 @@
-import Layout from "../components/layout";
+import type { NextPage } from "next";
+import Seo from "../components/seo";
 
-const Home: React.FC = () => {
+const Home: NextPage = () => {
   return (
-    <Layout title="Crypto Lit" description="A platform for">
-      Content
-    </Layout>
+    <>
+      <Seo title="Crypto literature" description="Crypto literature" />
+      <div>Crypto Literature</div>
+    </>
   );
 };
 

@@ -1,5 +1,7 @@
-const Footer: React.FC = () => {
-  return <footer>Footer here</footer>;
+import type { NextPage } from "next";
+
+const Footer: NextPage = () => {
+  return <footer>Footer</footer>;
 };
 
 export default Footer;
