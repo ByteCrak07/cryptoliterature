@@ -1,0 +1,48 @@
+/* Btn hover animation */
+.bannerBtn:hover svg:nth-child(1) {
+  animation: arrow-left1 1.2s infinite linear;
+}
+
+.bannerBtn svg:nth-child(2) {
+  transform: translateX(-8px);
+}
+
+.bannerBtn:hover svg:nth-child(2) {
+  animation: arrow-left2 1.2s 0.6s infinite linear;
+}
+
+@keyframes arrow-left1 {
+  0% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(8px);
+    opacity: 1;
+  }
+  51% {
+    transform: translateX(8px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(8px);
+    opacity: 0;
+  }
+}
+
+@keyframes arrow-left2 {
+  0% {
+    transform: translateX(-8px);
+    opacity: 0;
+  }
+  1% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 0;
+  }
+}
