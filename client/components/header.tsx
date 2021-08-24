@@ -1,6 +1,6 @@
-import type { NextPage } from "next";
+import { FC } from "react";
 
-const Header: NextPage = () => {
+const Header: FC = () => {
   return <header>Header</header>;
 };
 
