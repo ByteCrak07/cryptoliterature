@@ -1,6 +1,5 @@
-import type { NextPage } from "next";
 import Head from "next/head";
-import { ReactNode } from "react";
+import { ReactNode, FC } from "react";
 import Footer from "./footer";
 import Header from "./header";
 
@@ -8,12 +7,34 @@ interface LayoutProps {
   children: ReactNode;
 }
 
-const Layout: NextPage<LayoutProps> = ({ children }) => {
+const Layout: FC<LayoutProps> = ({ children }) => {
   return (
     <>
+      <Head>
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/icons/apple-touch-icon.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/icons/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/icons/favicon-16x16.png"
+        />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#ffffff" />
+      </Head>
+
       <Header />
 
-      <main>{children}</main>
+      {children}
 
       <Footer />
     </>

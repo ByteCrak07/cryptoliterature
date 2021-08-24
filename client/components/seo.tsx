@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import { FC } from "react";
 import Head from "next/head";
 
 interface LayoutProps {
@@ -6,7 +6,7 @@ interface LayoutProps {
   description: string;
 }
 
-const Seo: NextPage<LayoutProps> = ({ title, description }) => {
+const Seo: FC<LayoutProps> = ({ title, description }) => {
   return (
     <Head>
       <title>{title}</title>

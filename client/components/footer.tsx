@@ -1,6 +1,6 @@
-import type { NextPage } from "next";
+import { FC } from "react";
 
-const Footer: NextPage = () => {
+const Footer: FC = () => {
   return <footer>Footer</footer>;
 };
 
