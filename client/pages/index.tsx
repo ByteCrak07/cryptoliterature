@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
-import SwiperCore, { EffectCoverflow, Autoplay } from "swiper";
+import SwiperCore, { Autoplay } from "swiper";
 // icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
@@ -10,7 +10,7 @@ import Seo from "../components/seo";
 // styles
 import styles from "../styles/Home.module.css";
 
-SwiperCore.use([EffectCoverflow, Autoplay]);
+SwiperCore.use([Autoplay]);
 
 const Home: NextPage = () => {
   return (
