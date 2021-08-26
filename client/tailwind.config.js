@@ -13,6 +13,7 @@ module.exports = {
       flex: {
         2: "2 2 0%",
         3: "3 3 0%",
+        litBlue: "#0B1D25",
       },
     },
   },
