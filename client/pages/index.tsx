@@ -68,7 +68,6 @@ const Home: NextPage = () => {
           </SwiperSlide>
         </Swiper>
       </section>
-      <Seo title="Crypto literature" description="Crypto literature" />
       <Card
         genre="Poem"
         hash="#473658"
@@ -115,7 +114,6 @@ const Home: NextPage = () => {
         listedBy="James Maxwell"
         listedByAvatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
       />
-      <div>Crypto Literature</div>
     </>
   );
 };

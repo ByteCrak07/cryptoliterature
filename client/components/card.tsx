@@ -56,7 +56,7 @@ const Card: React.FC<Props> = ({
       {currentBid ? "" : <hr className="w-11/12 mx-auto" />}
       <div
         className={`p-3 px-4 card-footer ${
-          currentBid ? "bg-litBlue text-white" : ""
+          currentBid ? "bg-lit-dark text-white" : ""
         } w h-24 flex justify-between align-middle text-lg`}
       >
         {(() => {
