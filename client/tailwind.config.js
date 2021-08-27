@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       colors: {
         "lit-dark": "#0B1D25",
+        "lit-gray": "#828282",
       },
       fontFamily: {
         Merriweather: ["Merriweather", "serif"],
