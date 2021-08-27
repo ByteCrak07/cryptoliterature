@@ -15,7 +15,7 @@ import styles from "../styles/Home.module.css";
 SwiperCore.use([Autoplay]);
 
 const Home: NextPage = () => {
-  const [selected, setSelected] = useState<number>(1);
+  const [selected, setSelected] = useState<number>(0);
 
   const filters = ["All", "Short Story", "Poem", "Quote"];
 
