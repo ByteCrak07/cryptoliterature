@@ -2,6 +2,7 @@ import React from "react";
 import RoundAvatar from "./round-avatar";
 
 interface Props {
+  selected: string;
   genre: string;
   hash: string;
   title: string;
@@ -19,6 +20,7 @@ interface Props {
 }
 
 const Card: React.FC<Props> = ({
+  selected,
   genre,
   hash,
   title,
@@ -36,40 +38,44 @@ const Card: React.FC<Props> = ({
 }) => {
   return (
     <div
-      className={`container inline-block m-2 overflow-hidden w-80 h-72 rounded-lg border-gray-300 border  ${
+      className={`container inline-block m-auto w-80 h-76 rounded-lg border-gray-300 border font-Poppins ${
         uploadedIn ? "bg-gray-100" : ""
-      }`}
+      } ${selected == genre || selected == "All" ? "" : "hidden"}`}
     >
-      <div className="genre-hash flex p-2 justify-between">
-        <section className="inline-block leading-6 p-0.5 m-2 px-2 bg-gray-200 rounded-full text-sm text-center align-middle">
-          {genre}
-        </section>
-        <section className="p-1 m-2 font-semibold">{hash}</section>
-      </div>
-      <div className="title-avatar p-2 my-3">
-        <section className="font-bold text-xl font-serif">{title}</section>
-        <section className="flex justify-start my-5">
-          <RoundAvatar image={avatar} />
-          <span className="ml-2 font-semibold">{name}</span>
-        </section>
+      <div className="px-2">
+        <div className="genre-hash flex p-2 justify-between">
+          <section className="p-1 px-2 my-2 bg-gray-200 rounded-full text-sm font-normal">
+            {genre}
+          </section>
+          <section className="p-1 m-2 font-medium">{hash}</section>
+        </div>
+        <div className="title-avatar p-2 my-auto h-36 flex flex-col justify-center">
+          <section className="font-bold text-2xl font-Merriweather text-lit-dark">
+            {title}
+          </section>
+          <section className="flex justify-start my-5">
+            <RoundAvatar image={avatar} />
+            <span className="ml-2 font-medium">{name}</span>
+          </section>
+        </div>
       </div>
       {currentBid ? "" : <hr className="w-11/12 mx-auto" />}
       <div
-        className={`p-3 px-4 card-footer ${
+        className={`p-5 px-4 rounded-b-lg ${
           currentBid ? "bg-lit-dark text-white" : ""
-        } w h-24 flex justify-between align-middle text-lg`}
+        } w flex justify-between items-center text-6x1`}
       >
         {(() => {
           if (currentBid) {
             return (
               <>
                 <section className="pr-2">
-                  <h5>Current Bid</h5>
+                  <h5 className="font-light">Current Bid</h5>
                   <p className="font-semibold">{currentBid}</p>
                 </section>
                 <section className="pr-4">
-                  <h5>Ending In</h5>
-                  <p className="font-semibold">{endingIn}</p>
+                  <h5 className="font-light">Ending In</h5>
+                  <p className="font-medium">{endingIn}</p>
                 </section>
               </>
             );
@@ -77,14 +83,16 @@ const Card: React.FC<Props> = ({
             return (
               <>
                 <section className="pr-4">
-                  <h5>Sold For</h5>
+                  <h5 className="font-light">Sold For</h5>
                   <p className="font-semibold">{soldFor}</p>
                 </section>
                 <section className="pr-4">
-                  <h5>Owned By</h5>
+                  <h5 className="font-light">Owned By</h5>
                   <span className="flex align-middle">
                     <RoundAvatar image={ownedByAvatar} />
-                    <span className="ml-2 font-semibold">{ownedBy}</span>
+                    <span className="ml-2 font-medium">
+                      {ownedBy?.substring(0, 9) + ".."}
+                    </span>
                   </span>
                 </section>
               </>
@@ -92,17 +100,19 @@ const Card: React.FC<Props> = ({
           } else if (uploadedIn) {
             return (
               <section>
-                <h5>Uploaded In</h5>
-                <p className="font-semibold">{uploadedIn}</p>
+                <h5 className="font-light">Uploaded In</h5>
+                <p className="font-medium">{uploadedIn}</p>
               </section>
             );
           } else if (ownedBy) {
             return (
               <section>
-                <h5>Owned By</h5>
+                <h5 className="font-light">Owned By</h5>
                 <span className="flex align-middle">
                   <RoundAvatar image={ownedByAvatar} />
-                  <span className="ml-2 font-semibold">{ownedBy}</span>
+                  <span className="ml-2 font-medium">
+                    {ownedBy.substring(0, 9) + ".."}
+                  </span>
                 </span>
               </section>
             );
@@ -110,14 +120,16 @@ const Card: React.FC<Props> = ({
             return (
               <>
                 <section className="">
-                  <h5>Reserve Price</h5>
-                  <p className="font-semibold">{reservePrice}</p>
+                  <h5 className="font-light">Reserve Price</h5>
+                  <p className="font-medium">{reservePrice}</p>
                 </section>
                 <section className="">
-                  <h5>Listed By</h5>
+                  <h5 className="font-light">Listed By</h5>
                   <span className="flex align-middle">
                     <RoundAvatar image={listedByAvatar} />
-                    <span className="ml-2 font-semibold">{listedBy}</span>
+                    <span className="ml-2 font-medium">
+                      {listedBy?.substring(0, 9) + ".."}
+                    </span>
                   </span>
                 </section>
               </>
