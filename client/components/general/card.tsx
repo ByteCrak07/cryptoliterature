@@ -38,7 +38,7 @@ const Card: React.FC<Props> = ({
 }) => {
   return (
     <div
-      className={`container inline-block m-auto w-80 h-76 rounded-lg border-gray-300 border font-Poppins ${
+      className={`container inline-block w-80 h-76 rounded-lg border-gray-300 border font-Poppins ${
         uploadedIn ? "bg-gray-100" : ""
       } ${selected == genre || selected == "All" ? "" : "hidden"}`}
     >

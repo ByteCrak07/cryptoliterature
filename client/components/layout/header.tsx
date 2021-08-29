@@ -5,14 +5,19 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 // styles
-import styles from "../styles/Header.module.css";
+import styles from "../../styles/Header.module.css";
 
 const Header: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const menuBtn = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (isOpen) {
+    if (
+      isOpen &&
+      !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      )
+    ) {
       document.body.style.overflow = "hidden";
       document.body.style.paddingRight = "10px";
       if (menuBtn.current) menuBtn.current.style.paddingRight = "10px";
@@ -103,7 +108,7 @@ const Header: FC = () => {
 
       {/* sidenav overlay */}
       <div
-        className={`fixed inset-0 bg-lit-dark transition duration-500 bg-opacity-30 transform ${
+        className={`fixed lg:hidden inset-0 bg-lit-dark transition duration-500 bg-opacity-30 transform ${
           !isOpen ? "translate-x-full" : ""
         }`}
         onClick={() => {
@@ -113,7 +118,7 @@ const Header: FC = () => {
 
       {/* side navbar */}
       <div
-        className={`bg-white w-60 fixed right-0 top-0 bottom-0 transition duration-500 transform ${
+        className={`bg-white lg:hidden w-60 fixed right-0 top-0 bottom-0 transition duration-500 transform ${
           !isOpen ? "translate-x-full" : ""
         }`}
       >
