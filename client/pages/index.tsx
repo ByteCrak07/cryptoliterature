@@ -7,8 +7,8 @@ import SwiperCore, { Autoplay } from "swiper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 // components
-import Card from "../components/card";
-import Seo from "../components/seo";
+import Card from "../components/general/card";
+import Seo from "../components/general/seo";
 // styles
 import styles from "../styles/Home.module.css";
 
@@ -22,7 +22,8 @@ const Home: NextPage = () => {
   return (
     <>
       <Seo title="Cryptoliterature" description="Crypto literature" />
-      <section className="text-lit-dark py-20 px-10 md:px-20">
+
+      <section className="text-lit-dark">
         <Swiper
           slidesPerView={1}
           spaceBetween={20}
@@ -65,15 +66,16 @@ const Home: NextPage = () => {
               <div className="flex-1 hidden md:flex justify-around">
                 <Image
                   src="/banner/Marcus_Aurelius.png"
-                  height="500px"
-                  width="500px"
+                  height="550px"
+                  width="450px"
                 />
               </div>
             </div>
           </SwiperSlide>
         </Swiper>
       </section>
-      <div className="container mx-auto xl:px-24">
+
+      <section className="container mx-auto my-20">
         <div className="flex pl-4 md:justify-start my-5 justify-center text-lit-dark">
           {filters.map((filter, i) => (
             <button
@@ -85,11 +87,11 @@ const Home: NextPage = () => {
                 selected == i ? "bg-lit-dark text-white" : ""
               }`}
             >
-              <span>{filter}</span>
+              <span className="block whitespace-nowrap">{filter}</span>
             </button>
           ))}
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 justify-self-center gap-3 gap-y-5">
+        <div className="flex flex-wrap justify-center gap-x-5 gap-y-10">
           <Card
             selected={filters[selected]}
             genre="Poem"
@@ -172,7 +174,7 @@ const Home: NextPage = () => {
             endingIn="05h 12m 45s"
           />
         </div>
-      </div>
+      </section>
     </>
   );
 };
