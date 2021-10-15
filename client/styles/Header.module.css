@@ -1,6 +1,27 @@
-/* Wallet */
-.wallet:hover > span {
-  text-shadow: 1px 3px 2px #0b1d2569;
+/* menu */
+.menu {
+  position: relative;
+}
+
+.menu::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -10px;
+  height: 3px;
+  width: 0;
+  border-radius: 5px;
+  background-color: #0b1d25;
+  transition: width 300ms ease-in-out 100ms;
+}
+
+.menuActive.menu::after {
+  width: calc(100% + 10px);
+}
+
+.menu:hover.menu::after {
+  width: calc(100% + 10px);
 }
 
 /* Menu Btn */

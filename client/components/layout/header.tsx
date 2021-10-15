@@ -1,6 +1,7 @@
 import { FC, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 // icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -10,6 +11,20 @@ import styles from "../../styles/Header.module.css";
 const Header: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const menuBtn = useRef<HTMLDivElement>(null);
+
+  const router = useRouter();
+
+  const closeSideBar = () => {
+    setIsOpen(false);
+  };
+
+  const setActiveLink = () => {
+    document.querySelectorAll("#nav-header a").forEach((ele) => {
+      ele.classList.remove(styles.menuActive);
+      if (ele.getAttribute("href") === window.location.pathname)
+        ele.classList.add(styles.menuActive);
+    });
+  };
 
   useEffect(() => {
     if (
@@ -22,13 +37,30 @@ const Header: FC = () => {
       document.body.style.paddingRight = "10px";
       if (menuBtn.current) menuBtn.current.style.paddingRight = "10px";
     } else {
-      document.body.removeAttribute("style");
-      if (menuBtn.current) menuBtn.current.removeAttribute("style");
+      setTimeout(() => {
+        document.body.removeAttribute("style");
+        if (menuBtn.current) menuBtn.current.removeAttribute("style");
+      }, 500);
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    document.querySelectorAll(".sidebar a").forEach((ele) => {
+      ele.addEventListener("click", closeSideBar);
+    });
+
+    setActiveLink();
+
+    router.events.on("routeChangeComplete", () => {
+      setActiveLink();
+    });
+  }, []);
+
   return (
-    <header className="fixed bg-white top-0 left-0 right-0 z-10 py-5 md:py-7 px-7 md:px-10 lg:px-20 flex justify-between">
+    <header
+      id="nav-header"
+      className="fixed bg-white top-0 left-0 right-0 z-10 py-5 md:py-7 px-7 md:px-10 lg:px-20 flex justify-between shadow"
+    >
       <Link href="/">
         <a>
           <Image src="/logo/logo.svg" alt="logo" height="37" width="237" />
@@ -40,7 +72,7 @@ const Header: FC = () => {
         <ul className="flex items-center font-Poppins font-medium">
           <li className="mx-4">
             <Link href="/wallet">
-              <a className={`flex items-center ${styles.wallet}`}>
+              <a className={`flex items-center ${styles.menu}`}>
                 <div
                   className="bg-lit-dark h-5 w-5 rounded-full flex items-center justify-center"
                   style={{ padding: 6 }}
@@ -57,12 +89,17 @@ const Header: FC = () => {
           </li>
           <li className="mx-4">
             <Link href="/bids">
-              <a className="hover:text-shadow">Bids</a>
+              <a className={`${styles.menu}`}>Bids</a>
             </Link>
           </li>
           <li className="mx-4">
             <Link href="/story">
-              <a className="hover:text-shadow">Our&nbsp;Story</a>
+              <a className={`${styles.menu}`}>Our&nbsp;Story</a>
+            </Link>
+          </li>
+          <li className="mx-4">
+            <Link href="/blogs">
+              <a className={`${styles.menu}`}>Blogs</a>
             </Link>
           </li>
           <li
@@ -71,7 +108,7 @@ const Header: FC = () => {
           ></li>
           <li className="mx-4">
             <Link href="/login">
-              <a className="hover:text-shadow">Login</a>
+              <a className={`${styles.menu}`}>Login</a>
             </Link>
           </li>
           <li>
@@ -118,14 +155,14 @@ const Header: FC = () => {
 
       {/* side navbar */}
       <div
-        className={`bg-white lg:hidden w-60 fixed right-0 top-0 bottom-0 transition duration-500 transform ${
+        className={`sidebar bg-white lg:hidden w-60 fixed right-0 top-0 bottom-0 transition duration-500 transform ${
           !isOpen ? "translate-x-full" : ""
         }`}
       >
         <nav>
           <div className="p-5 pt-20">
             <Link href="/">
-              <a>
+              <a className="block">
                 <Image
                   src="/logo/logo.svg"
                   alt="logo"
@@ -138,7 +175,7 @@ const Header: FC = () => {
           <ul className="flex flex-col items-center font-Poppins font-medium">
             <li className="my-4">
               <Link href="/wallet">
-                <a className={`flex items-center ${styles.wallet}`}>
+                <a className={`flex items-center ${styles.menu}`}>
                   <div
                     className="bg-lit-dark h-5 w-5 rounded-full flex items-center justify-center"
                     style={{ padding: 6 }}
@@ -155,12 +192,17 @@ const Header: FC = () => {
             </li>
             <li className="my-4">
               <Link href="/bids">
-                <a className="hover:text-shadow">Bids</a>
+                <a className={`${styles.menu}`}>Bids</a>
               </Link>
             </li>
             <li className="my-4">
               <Link href="/story">
-                <a className="hover:text-shadow">Our&nbsp;Story</a>
+                <a className={`${styles.menu}`}>Our&nbsp;Story</a>
+              </Link>
+            </li>
+            <li className="my-4">
+              <Link href="/blogs">
+                <a className={`${styles.menu}`}>Blogs</a>
               </Link>
             </li>
             <li
@@ -169,7 +211,7 @@ const Header: FC = () => {
             ></li>
             <li className="my-4">
               <Link href="/login">
-                <a className="hover:text-shadow">Login</a>
+                <a className={`${styles.menu}`}>Login</a>
               </Link>
             </li>
             <li className="my-4">
