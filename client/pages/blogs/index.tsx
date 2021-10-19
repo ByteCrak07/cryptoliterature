@@ -1,173 +1,132 @@
-import type { NextPage } from "next";
-import Link from "next/link";
-import Image from "next/image";
+import type { GetStaticProps, NextPage } from "next";
+import { Fragment } from "react";
 import Seo from "../../components/general/seo";
-import RoundAvatar from "../../components/general/round-avatar";
 import LatestBlogCard from "../../components/blogs/latest-blog-card";
 import BlogCard from "../../components/blogs/card";
+// ghost apis
+import { getPosts } from "../../lib/posts";
 
-const dummyTitle = "Addressing the Dark Side of the Crypto World";
-const dummyDescription =
-  "The same reason crypto-assets—or what some people call crypto-currencies—are so appealing is also what makes them dangerous. These digital offerings are typically built in a decentralized way and without the typically built in a decentralized way and without thetypically built in a decentralized way.";
+export const getStaticProps: GetStaticProps = async () => {
+  const posts = await getPosts();
 
-const Blogs: NextPage = () => {
+  if (!posts) {
+    return {
+      notFound: true,
+      revalidate: 600,
+    };
+  }
+
+  return {
+    props: { posts },
+    revalidate: 600,
+  };
+};
+
+interface Post {
+  title: string;
+  excerpt: string;
+  custom_excerpt: string;
+  slug: string;
+  feature_image?: string;
+  feature_image_alt?: string;
+  featured: boolean;
+  primary_author: { profile_image?: string; name?: string };
+  published_at: string;
+}
+
+interface BlogsPageProps {
+  posts: Array<Post>;
+}
+
+const Blogs: NextPage<BlogsPageProps> = ({ posts }) => {
+  let featuredIndex = 0;
+  let featuredPost: Post = posts[0];
+
+  posts.forEach((post, i) => {
+    if (post.featured) {
+      featuredPost = post;
+      featuredIndex = i;
+    }
+  });
+
   return (
     <>
-      <Seo title="Blogs | Cryptoliterature" description="Our latest blogs" />
+      <Seo
+        title="Blogs | Cryptoliterature"
+        description="Our latest blogs - Cryptoliterature an epiphany to the literary world"
+      />
 
-      <section className="text-lit-dark">
+      <section>
         <div className="flex items-baseline">
           <h1 className="font-Poppins font-semibold text-2xl">Latest Blogs</h1>
         </div>
 
-        <LatestBlogCard
-          image={{
-            src: "/blogs/dummy1.png",
-            alt: "dummy1",
-            width: "591",
-            height: "311",
-          }}
-          title={dummyTitle}
-          description={dummyDescription}
-          link="/blogs"
-          author={{
-            imgSrc:
-              "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg",
-            name: "John Doe",
-          }}
-          time={new Date().getTime()}
-        />
+        <div className="lg:px-5 xl:px-32">
+          <LatestBlogCard
+            image={
+              featuredPost.feature_image
+                ? {
+                    src: featuredPost.feature_image,
+                    alt: featuredPost.feature_image_alt,
+                    width: "2000",
+                    height: "1210",
+                  }
+                : undefined
+            }
+            title={featuredPost.title}
+            description={
+              featuredPost.custom_excerpt
+                ? featuredPost.custom_excerpt
+                : featuredPost.excerpt
+            }
+            link={`/blogs/${featuredPost.slug}`}
+            author={
+              featuredPost.primary_author
+                ? {
+                    imgSrc: featuredPost.primary_author.profile_image,
+                    name: featuredPost.primary_author.name,
+                  }
+                : undefined
+            }
+            time={featuredPost.published_at}
+          />
+        </div>
 
         <section className="my-20">
           <div className="flex flex-wrap gap-x-6 gap-y-10 justify-center">
-            <BlogCard
-              image={{
-                src: "/blogs/dummy2.png",
-                alt: "dummy2",
-                width: "244",
-                height: "228",
-              }}
-              title={dummyTitle}
-              description={dummyDescription}
-              link="/blogs"
-              author={{
-                imgSrc:
-                  "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg",
-                name: "John Doe",
-              }}
-            />
-            <BlogCard
-              image={{
-                src: "/blogs/dummy3.png",
-                alt: "dummy3",
-                width: "244",
-                height: "228",
-              }}
-              title={dummyTitle}
-              description={dummyDescription}
-              link="/blogs"
-              author={{
-                imgSrc:
-                  "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg",
-                name: "John Doe",
-              }}
-            />
-            <BlogCard
-              image={{
-                src: "/blogs/dummy2.png",
-                alt: "dummy2",
-                width: "244",
-                height: "228",
-              }}
-              title={dummyTitle}
-              description={dummyDescription}
-              link="/blogs"
-              author={{
-                imgSrc:
-                  "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg",
-                name: "John Doe",
-              }}
-            />
-            <BlogCard
-              image={{
-                src: "/blogs/dummy3.png",
-                alt: "dummy3",
-                width: "244",
-                height: "228",
-              }}
-              title={dummyTitle}
-              description={dummyDescription}
-              link="/blogs"
-              author={{
-                imgSrc:
-                  "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg",
-                name: "John Doe",
-              }}
-            />
-            <BlogCard
-              image={{
-                src: "/blogs/dummy2.png",
-                alt: "dummy2",
-                width: "244",
-                height: "228",
-              }}
-              title={dummyTitle}
-              description={dummyDescription}
-              link="/blogs"
-              author={{
-                imgSrc:
-                  "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg",
-                name: "John Doe",
-              }}
-            />
-            <BlogCard
-              image={{
-                src: "/blogs/dummy3.png",
-                alt: "dummy3",
-                width: "244",
-                height: "228",
-              }}
-              title={dummyTitle}
-              description={dummyDescription}
-              link="/blogs"
-              author={{
-                imgSrc:
-                  "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg",
-                name: "John Doe",
-              }}
-            />
-            <BlogCard
-              image={{
-                src: "/blogs/dummy2.png",
-                alt: "dummy2",
-                width: "244",
-                height: "228",
-              }}
-              title={dummyTitle}
-              description={dummyDescription}
-              link="/blogs"
-              author={{
-                imgSrc:
-                  "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg",
-                name: "John Doe",
-              }}
-            />
-            <BlogCard
-              image={{
-                src: "/blogs/dummy3.png",
-                alt: "dummy3",
-                width: "244",
-                height: "228",
-              }}
-              title={dummyTitle}
-              description={dummyDescription}
-              link="/blogs"
-              author={{
-                imgSrc:
-                  "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg",
-                name: "John Doe",
-              }}
-            />
+            {posts.map((post, i) => {
+              if (i !== featuredIndex) {
+                return (
+                  <Fragment key={`blog${i}`}>
+                    <BlogCard
+                      image={
+                        post.feature_image
+                          ? {
+                              src: post.feature_image,
+                              alt: post.feature_image_alt,
+                              width: "2000",
+                              height: "1210",
+                            }
+                          : undefined
+                      }
+                      title={post.title}
+                      description={
+                        post.custom_excerpt ? post.custom_excerpt : post.excerpt
+                      }
+                      link={`/blogs/${post.slug}`}
+                      author={
+                        posts[i].primary_author
+                          ? {
+                              imgSrc: post.primary_author.profile_image,
+                              name: post.primary_author.name,
+                            }
+                          : undefined
+                      }
+                    />
+                  </Fragment>
+                );
+              } else return <Fragment key={`blog${i}`}></Fragment>;
+            })}
           </div>
         </section>
       </section>

@@ -27,3 +27,136 @@
   border-radius: 10px;
   background-color: #0b1d25;
 }
+
+/* blog styling */
+.kg-image {
+  @apply mx-auto;
+}
+
+.kg-gallery-row {
+  @apply flex flex-row justify-center;
+}
+
+.kg-gallery-image {
+  @apply w-full;
+}
+
+.kg-gallery-image img {
+  @apply w-full h-full;
+}
+
+.kg-embed-card {
+  @apply relative;
+}
+
+.kg-embed-card-yt {
+  padding-top: 56.5%;
+}
+
+.kg-embed-card > iframe {
+  @apply absolute top-0 left-0 w-full h-full;
+}
+
+.twitter-tweet {
+  @apply mx-auto;
+}
+
+/* blog bookmark */
+:root {
+  --white-color: #fff;
+  --light-gray-color: #f1f1f1;
+  --mid-gray-color: #d9d9d9;
+  --dark-gray-color: #1a1a1a;
+  --black-color: #000;
+}
+
+.kg-bookmark-card {
+  border: 1px solid var(--mid-gray-color);
+  border-radius: 4px;
+}
+
+.kg-bookmark-container {
+  display: flex;
+  overflow: hidden;
+  text-decoration: none !important;
+}
+
+.kg-bookmark-container::after {
+  display: none;
+}
+
+.kg-bookmark-content {
+  flex-grow: 1;
+  overflow: hidden;
+  padding: 25px;
+}
+
+.kg-bookmark-title {
+  color: var(--dark-gray-color);
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.kg-bookmark-description {
+  overflow: hidden;
+  margin-top: 5px;
+  color: var(--secondary-text-color);
+  font-size: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kg-bookmark-metadata {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.kg-bookmark-icon {
+  margin-right: 5px;
+  width: 20px;
+  height: 20px;
+}
+
+/* These classes will be deprecated. Keep them for GScan validation. */
+.kg-bookmark-author,
+.kg-bookmark-publisher {
+  display: inline;
+}
+
+.kg-bookmark-metadata > span {
+  color: var(--dark-gray-color);
+}
+
+.kg-bookmark-metadata > span:nth-of-type(2)::before {
+  content: "•";
+  padding: 0 5px;
+}
+
+.kg-bookmark-thumbnail {
+  position: relative;
+  flex-shrink: 0;
+  margin-left: 20px;
+  width: 300px;
+}
+
+.kg-bookmark-thumbnail img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 767px) {
+  .kg-bookmark-container {
+    flex-direction: column;
+  }
+
+  .kg-bookmark-thumbnail {
+    margin-left: 0;
+    width: 100%;
+    height: 200px;
+  }
+}

@@ -21,7 +21,8 @@ const Header: FC = () => {
   const setActiveLink = () => {
     document.querySelectorAll("#nav-header a").forEach((ele) => {
       ele.classList.remove(styles.menuActive);
-      if (ele.getAttribute("href") === window.location.pathname)
+      let href = ele.getAttribute("href");
+      if (href && window.location.pathname.startsWith(href))
         ele.classList.add(styles.menuActive);
     });
   };

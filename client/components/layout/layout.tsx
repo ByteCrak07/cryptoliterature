@@ -11,6 +11,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   return (
     <>
       <Head>
+        <link rel="icon" href="/favicon.ico" />
         <link
           rel="apple-touch-icon"
           sizes="180x180"
@@ -30,11 +31,18 @@ const Layout: FC<LayoutProps> = ({ children }) => {
         />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#ffffff" />
+
+        <meta
+          name="google-site-verification"
+          content="v2X5NCqgwnt0j6GlKi2u1pgwrHRtIPOs6ktJgbwR6fs"
+        />
       </Head>
 
       <Header />
 
-      <main className="pt-24 md:pt-28 px-7 md:px-10 lg:px-20">{children}</main>
+      <main className="pt-24 md:pt-28 px-7 md:px-10 lg:px-20 text-lit-dark">
+        {children}
+      </main>
 
       <Footer />
     </>
