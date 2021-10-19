@@ -13,7 +13,7 @@ import LatestBlogCard from "../components/blogs/latest-blog-card";
 import Seo from "../components/general/seo";
 // styles
 import styles from "../styles/Home.module.css";
-import ComingSoon from "../components/general/coming-soom";
+import ComingSoon from "../components/general/coming-soon";
 
 SwiperCore.use([Autoplay]);
 
@@ -27,6 +27,7 @@ const Home: NextPage = () => {
       <Seo
         title="Cryptoliterature"
         description="Sell your Literature works as NFTs - Cryptoliterature an epiphany to the literary world"
+        path="/"
       />
 
       <ComingSoon />

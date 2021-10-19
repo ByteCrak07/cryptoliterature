@@ -7,6 +7,7 @@ import { faDotCircle } from "@fortawesome/free-solid-svg-icons";
 // components
 import RoundAvatar from "../../components/general/round-avatar";
 import Seo from "../../components/general/seo";
+import ComingSoon from "../../components/general/coming-soon";
 // styles
 import blogPostStyles from "../../styles/BlogPost.module.css";
 // ghost api
@@ -73,7 +74,17 @@ const PostPage: NextPage<PostPageProps> = ({ post }) => {
     });
   }, [router]);
 
-  if (router.isFallback) return <div>Loading...</div>;
+  if (router.isFallback)
+    return (
+      <>
+        <Seo
+          title="Loading | Cryptoliterature"
+          description="Loading..."
+          path={null}
+        />
+        <ComingSoon />
+      </>
+    );
 
   return (
     <>
@@ -90,6 +101,7 @@ const PostPage: NextPage<PostPageProps> = ({ post }) => {
             ? post.custom_excerpt
             : post.excerpt
         }
+        path={`/blogs/${post.slug}`}
         blog={true}
         og_title={post.og_title}
         og_description={post.og_description}

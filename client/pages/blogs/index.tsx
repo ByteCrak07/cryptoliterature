@@ -54,6 +54,7 @@ const Blogs: NextPage<BlogsPageProps> = ({ posts }) => {
       <Seo
         title="Blogs | Cryptoliterature"
         description="Our latest blogs - Cryptoliterature an epiphany to the literary world"
+        path="/blogs"
       />
 
       <section>
