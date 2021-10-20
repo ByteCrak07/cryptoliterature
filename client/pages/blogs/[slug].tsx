@@ -111,6 +111,7 @@ const PostPage: NextPage<PostPageProps> = ({ post }) => {
         twitter_description={post.twitter_description}
         twitter_image={post.twitter_image}
         author={post.primary_author?.name}
+        authorImg={post.primary_author?.profile_image}
       />
 
       <section className="lg:px-5 xl:px-32 mb-20">
