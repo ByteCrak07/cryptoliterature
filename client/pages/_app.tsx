@@ -1,8 +1,11 @@
-import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { useEffect } from "react";
 import { init } from "../lib/ga";
 import Layout from "../components/layout/layout";
+
+// styles
+import "../styles/globals.css";
+import "swiper/css/bundle";
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {

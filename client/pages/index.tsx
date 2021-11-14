@@ -72,6 +72,7 @@ const Home: NextPage = () => {
               <div className="flex-1 flex justify-around max-w-xs md:max-w-none">
                 <Image
                   src="/banner/Marcus_Aurelius.png"
+                  alt="Marcus Aurelius"
                   height="550px"
                   width="450px"
                 />

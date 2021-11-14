@@ -55,6 +55,7 @@ const Header: FC = () => {
     router.events.on("routeChangeComplete", () => {
       setActiveLink();
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -81,6 +82,7 @@ const Header: FC = () => {
                   <FontAwesomeIcon
                     className="inline text-white"
                     icon={faPlus}
+                    size="xs"
                   />
                 </div>
                 &nbsp;

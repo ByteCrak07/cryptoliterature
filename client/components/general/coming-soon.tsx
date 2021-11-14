@@ -29,7 +29,7 @@ const ComingSoon: FC = () => {
             <h1 className="text-4xl font-normal">
               Our Website
               <br />
-              <span className="font-bold">is on it's way!</span>
+              <span className="font-bold">is on it&apos;s way!</span>
             </h1>
             <span className="inline-block mt-10">
               Feel free to check our{" "}
