@@ -1,9 +1,9 @@
-import React from "react";
+import { FC } from "react";
 
-interface Props {
+interface RoundAvatarProps {
   image?: string;
 }
-const RoundAvatar: React.FC<Props> = ({ image }) => {
+const RoundAvatar: FC<RoundAvatarProps> = ({ image }) => {
   return (
     <div className={`rounded-full inline-block`}>
       <img src={`${image}`} className="rounded-full w-6 h-6 object-cover" />

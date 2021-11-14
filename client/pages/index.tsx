@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Autoplay } from "swiper";
@@ -7,7 +8,8 @@ import SwiperCore, { Autoplay } from "swiper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 // components
-import Card from "../components/general/card";
+import Card from "../components/bids/card";
+import LatestBlogCard from "../components/blogs/latest-blog-card";
 import Seo from "../components/general/seo";
 // styles
 import styles from "../styles/Home.module.css";
@@ -36,15 +38,12 @@ const Home: NextPage = () => {
           longSwipesRatio={0.25}
         >
           <SwiperSlide>
-            <div className="flex">
-              <div
-                className="flex-1 flex justify-evenly align-items flex-col"
-                style={{ minHeight: "20rem" }}
-              >
-                <h1 className="font-Merriweather text-4xl md:text-5xl leading-snug md:leading-snug">
+            <div className="flex items-center flex-col-reverse md:flex-row">
+              <div className="flex-1 flex justify-evenly align-items flex-col md:mr-5">
+                <h1 className="mt-5 font-Merriweather text-4xl md:text-5xl leading-snug md:leading-snug">
                   An epiphany for the literary world!!
                 </h1>
-                <div className="w-full">
+                <div className="w-full mt-5">
                   <button
                     className={`${styles.bannerBtn} bg-lit-dark text-white font-semibold rounded-md px-5 py-3`}
                   >
@@ -63,7 +62,7 @@ const Home: NextPage = () => {
                   </button>
                 </div>
               </div>
-              <div className="flex-1 hidden md:flex justify-around">
+              <div className="flex-1 flex justify-around max-w-xs md:max-w-none">
                 <Image
                   src="/banner/Marcus_Aurelius.png"
                   height="550px"
@@ -75,7 +74,7 @@ const Home: NextPage = () => {
         </Swiper>
       </section>
 
-      <section className="container mx-auto my-20">
+      <section className="my-20">
         <div className="flex pl-4 md:justify-start my-5 justify-center text-lit-dark">
           {filters.map((filter, i) => (
             <button
@@ -174,6 +173,35 @@ const Home: NextPage = () => {
             endingIn="05h 12m 45s"
           />
         </div>
+      </section>
+
+      <section className="text-lit-dark">
+        <div className="flex items-baseline">
+          <h1 className="font-Poppins font-semibold text-2xl">Latest Blogs</h1>
+          <Link href="/blogs">
+            <a className="ml-3 block font-semibold">
+              View more <span style={{ letterSpacing: "-4px" }}>&gt;&gt;</span>
+            </a>
+          </Link>
+        </div>
+
+        <LatestBlogCard
+          image={{
+            src: "/blogs/dummy1.png",
+            alt: "dummy1",
+            width: "591",
+            height: "311",
+          }}
+          title="Addressing the Dark Side of the Crypto World"
+          description="The same reason crypto-assets—or what some people call crypto-currencies—are so appealing is also what makes them dangerous. These digital offerings are typically built in a decentralized way and without the typically built in a decentralized way and without thetypically built in a decentralized way."
+          link="/blogs"
+          author={{
+            imgSrc:
+              "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg",
+            name: "John Doe",
+          }}
+          time={new Date().getTime()}
+        />
       </section>
     </>
   );

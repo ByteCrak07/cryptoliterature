@@ -1,7 +1,7 @@
-import React from "react";
-import RoundAvatar from "./round-avatar";
+import { FC } from "react";
+import RoundAvatar from "../general/round-avatar";
 
-interface Props {
+interface CardProps {
   selected: string;
   genre: string;
   hash: string;
@@ -19,7 +19,7 @@ interface Props {
   listedByAvatar?: string;
 }
 
-const Card: React.FC<Props> = ({
+const Card: FC<CardProps> = ({
   selected,
   genre,
   hash,
