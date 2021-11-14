@@ -50,7 +50,7 @@ const Card: FC<CardProps> = ({
           <section className="p-1 m-2 font-medium">{hash}</section>
         </div>
         <div className="title-avatar p-2 my-auto h-36 flex flex-col justify-center">
-          <section className="font-bold text-2xl font-Merriweather text-lit-dark">
+          <section className="font-bold text-2xl font-Merriweather">
             {title}
           </section>
           <section className="flex justify-start my-5">

@@ -1,21 +1,16 @@
 import { FC } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import Image, { ImageProps } from "next/image";
 import RoundAvatar from "../general/round-avatar";
 
 interface CardProps {
-  image: {
-    src: string;
-    alt: string;
-    width?: string;
-    height?: string;
-  };
-  title: string;
-  description: string;
+  image?: ImageProps;
+  title?: string;
+  description?: string;
   link: string;
-  author: {
-    imgSrc: string;
-    name: string;
+  author?: {
+    imgSrc?: string;
+    name?: string;
   };
   time?: number | string;
 }
@@ -29,20 +24,24 @@ const LatestBlogCard: FC<CardProps> = ({
   time,
 }) => {
   return (
-    <div className="flex flex-col md:flex-row w-full mt-5 text-lit-dark">
-      <div className="flex-1 flex items-center md:pr-4 justify-center md:justify-end">
+    <div className="flex flex-col md:flex-row gap-x-8 w-full mt-5">
+      <div className="flex-1 flex items-center justify-center md:justify-end">
         <Link href={link}>
           <a>
-            <Image
-              src={image.src}
-              alt={image.alt}
-              width={image.width}
-              height={image.height}
-            />
+            {image ? (
+              <Image
+                src={image.src}
+                alt={image.alt}
+                width={image.width}
+                height={image.height}
+              />
+            ) : (
+              <></>
+            )}
           </a>
         </Link>
       </div>
-      <div className="flex-1 flex flex-col mt-5 md:mt-0 md:pl-4 font-Poppins">
+      <div className="flex-1 flex flex-col mt-5 md:mt-0 font-Poppins">
         <Link href={link}>
           <a>
             <h2 className="font-bold text-2xl">{title}</h2>
@@ -64,8 +63,14 @@ const LatestBlogCard: FC<CardProps> = ({
         </div>
         <div className="mb-5 flex justify-between">
           <div className="flex items-center">
-            <RoundAvatar image={author.imgSrc} />
-            <span className="ml-2 font-Poppins">{author.name}</span>
+            {author ? (
+              <>
+                <RoundAvatar image={author.imgSrc} />
+                <span className="ml-2 font-Poppins">{author.name}</span>
+              </>
+            ) : (
+              <></>
+            )}
           </div>
           <div className="pr-2">
             {time

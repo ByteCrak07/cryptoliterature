@@ -13,6 +13,7 @@ import LatestBlogCard from "../components/blogs/latest-blog-card";
 import Seo from "../components/general/seo";
 // styles
 import styles from "../styles/Home.module.css";
+import ComingSoon from "../components/general/coming-soon";
 
 SwiperCore.use([Autoplay]);
 
@@ -23,9 +24,15 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <Seo title="Cryptoliterature" description="Crypto literature" />
+      <Seo
+        title="Cryptoliterature"
+        description="Sell your Literature works as NFTs - Cryptoliterature an epiphany to the literary world"
+        path="/"
+      />
 
-      <section className="text-lit-dark">
+      <ComingSoon />
+
+      {/* <section>
         <Swiper
           slidesPerView={1}
           spaceBetween={20}
@@ -75,7 +82,7 @@ const Home: NextPage = () => {
       </section>
 
       <section className="my-20">
-        <div className="flex pl-4 md:justify-start my-5 justify-center text-lit-dark">
+        <div className="flex pl-4 md:justify-start my-5 justify-center">
           {filters.map((filter, i) => (
             <button
               key={`filter-${i}`}
@@ -175,7 +182,7 @@ const Home: NextPage = () => {
         </div>
       </section>
 
-      <section className="text-lit-dark">
+      <section>
         <div className="flex items-baseline">
           <h1 className="font-Poppins font-semibold text-2xl">Latest Blogs</h1>
           <Link href="/blogs">
@@ -202,7 +209,7 @@ const Home: NextPage = () => {
           }}
           time={new Date().getTime()}
         />
-      </section>
+      </section> */}
     </>
   );
 };

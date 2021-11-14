@@ -1,0 +1,81 @@
+.BlogPost > * {
+  @apply mt-8;
+}
+
+/* default text size */
+.BlogPost p,
+.BlogPost ol,
+.BlogPost ul {
+  @apply mt-8 text-lg;
+}
+
+/* stylings for h1,h2,h3 */
+.BlogPost h1 {
+  @apply text-4xl font-semibold mt-8;
+}
+
+.BlogPost h2 {
+  @apply text-3xl font-semibold mt-8;
+}
+
+.BlogPost h3 {
+  @apply text-2xl font-semibold mt-8;
+}
+
+/* styling for a tags */
+.BlogPost a {
+  @apply underline;
+}
+
+/* styling for hr */
+.BlogPost hr {
+  @apply relative self-center overflow-visible h-2 w-2 rounded-full bg-lit-dark;
+}
+
+.BlogPost hr::before {
+  content: "";
+  @apply absolute right-6 h-2 w-2 rounded-full bg-lit-dark;
+}
+
+.BlogPost hr::after {
+  content: "";
+  @apply absolute left-6 h-2 w-2 rounded-full bg-lit-dark;
+}
+
+/* styling for ol,ul */
+.BlogPost ol {
+  @apply list-decimal pl-9;
+}
+
+.BlogPost ul {
+  @apply list-disc pl-9;
+}
+
+.BlogPost li {
+  @apply my-3;
+}
+
+.BlogPost li:first-child {
+  @apply mt-0;
+}
+
+.BlogPost li:last-child {
+  @apply mb-0;
+}
+
+/* smaller margins for content immediately after p,h2,h3 */
+.BlogPost p + p,
+.BlogPost h2 + *,
+.BlogPost h3 + * {
+  @apply mt-4;
+}
+
+/* styling for pre tag */
+.BlogPost pre {
+  @apply mt-4 px-6 py-4 bg-gray-100 rounded-md;
+}
+
+/* overrides margin of first child */
+.BlogPost > :first-child {
+  @apply m-0;
+}
