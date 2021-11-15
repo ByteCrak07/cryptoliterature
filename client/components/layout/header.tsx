@@ -2,6 +2,7 @@ import { FC, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import throttle from "lodash/throttle";
 // icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -50,6 +51,17 @@ const Header: FC = () => {
       ele.addEventListener("click", closeSideBar);
     });
 
+    window.addEventListener(
+      "scroll",
+      throttle(() => {
+        if (window.scrollY > 0) {
+          document.querySelector("#nav-header")?.classList.add("shadow");
+        } else {
+          document.querySelector("#nav-header")?.classList.remove("shadow");
+        }
+      }, 200)
+    );
+
     setActiveLink();
 
     router.events.on("routeChangeComplete", () => {
@@ -61,7 +73,7 @@ const Header: FC = () => {
   return (
     <header
       id="nav-header"
-      className="fixed bg-white top-0 left-0 right-0 z-10 py-5 md:py-7 px-7 md:px-10 lg:px-20 flex justify-between shadow"
+      className="fixed bg-white top-0 left-0 right-0 z-10 py-5 md:py-7 px-7 md:px-10 lg:px-20 flex justify-between"
     >
       <Link href="/">
         <a>

@@ -141,7 +141,10 @@ const PostPage: NextPage<PostPageProps> = ({ post }) => {
               <div className="flex items-center">
                 {post.primary_author ? (
                   <>
-                    <RoundAvatar image={post.primary_author.profile_image} />
+                    <RoundAvatar
+                      image={post.primary_author.profile_image}
+                      alt={post.primary_author.name}
+                    />
                     <span className="ml-2 font-Poppins">
                       {post.primary_author.name}
                     </span>

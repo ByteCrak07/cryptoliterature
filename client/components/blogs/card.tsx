@@ -41,7 +41,7 @@ const BlogCard: FC<CardProps> = ({
         <div className="flex items-center my-3">
           {author ? (
             <>
-              <RoundAvatar image={author.imgSrc} />
+              <RoundAvatar image={author.imgSrc} alt={author.name} />
               <span className="ml-2 font-Poppins">{author.name}</span>
             </>
           ) : (
