@@ -65,7 +65,7 @@ const LatestBlogCard: FC<CardProps> = ({
           <div className="flex items-center">
             {author ? (
               <>
-                <RoundAvatar image={author.imgSrc} />
+                <RoundAvatar image={author.imgSrc} alt={author.name} />
                 <span className="ml-2 font-Poppins">{author.name}</span>
               </>
             ) : (

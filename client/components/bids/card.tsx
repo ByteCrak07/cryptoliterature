@@ -54,7 +54,7 @@ const Card: FC<CardProps> = ({
             {title}
           </section>
           <section className="flex justify-start my-5">
-            <RoundAvatar image={avatar} />
+            <RoundAvatar image={avatar} alt={name} />
             <span className="ml-2 font-medium">{name}</span>
           </section>
         </div>
@@ -89,7 +89,7 @@ const Card: FC<CardProps> = ({
                 <section className="pr-4">
                   <h5 className="font-light">Owned By</h5>
                   <span className="flex align-middle">
-                    <RoundAvatar image={ownedByAvatar} />
+                    <RoundAvatar image={ownedByAvatar} alt={ownedBy} />
                     <span className="ml-2 font-medium">
                       {ownedBy?.substring(0, 9) + ".."}
                     </span>
@@ -109,7 +109,7 @@ const Card: FC<CardProps> = ({
               <section>
                 <h5 className="font-light">Owned By</h5>
                 <span className="flex align-middle">
-                  <RoundAvatar image={ownedByAvatar} />
+                  <RoundAvatar image={ownedByAvatar} alt={ownedBy} />
                   <span className="ml-2 font-medium">
                     {ownedBy.substring(0, 9) + ".."}
                   </span>
@@ -126,7 +126,7 @@ const Card: FC<CardProps> = ({
                 <section className="">
                   <h5 className="font-light">Listed By</h5>
                   <span className="flex align-middle">
-                    <RoundAvatar image={listedByAvatar} />
+                    <RoundAvatar image={listedByAvatar} alt={listedBy} />
                     <span className="ml-2 font-medium">
                       {listedBy?.substring(0, 9) + ".."}
                     </span>
