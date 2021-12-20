@@ -1,6 +1,6 @@
 # CryptoLiterature
 
-Sourse code to cryptoLiterature
+Source code for cryptoLiterature
 
 CryptoLiterature - An epiphany to the literary world
 
