@@ -1,7 +1,7 @@
 import Router from "next/router";
 import GA4React from "ga-4-react";
 
-let ga4react;
+let ga4react: GA4React;
 
 export async function init(G) {
   if (!GA4React.isInitialized() && G && process.browser) {
@@ -29,6 +29,6 @@ function logPageViews() {
   });
 }
 
-export function logEvent(action, label, category) {
+export function logEvent(action: string, label: string, category: string) {
   ga4react.event(action, label, category);
 }

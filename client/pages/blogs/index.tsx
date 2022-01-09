@@ -50,7 +50,7 @@ const Blogs: NextPage<BlogsPageProps> = ({ posts }) => {
   });
 
   return (
-    <>
+    <main className="main-div">
       <Seo
         title="Blogs | Cryptoliterature"
         description="Our latest blogs - Cryptoliterature an epiphany to the literary world"
@@ -131,7 +131,7 @@ const Blogs: NextPage<BlogsPageProps> = ({ posts }) => {
           </div>
         </section>
       </section>
-    </>
+    </main>
   );
 };
 

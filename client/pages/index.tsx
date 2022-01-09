@@ -23,7 +23,7 @@ const Home: NextPage = () => {
   const filters = ["All", "Short Story", "Poem", "Quote"];
 
   return (
-    <>
+    <main className="main-div">
       <Seo
         title="Cryptoliterature"
         description="Sell your Literature works as NFTs - Cryptoliterature an epiphany to the literary world"
@@ -211,7 +211,7 @@ const Home: NextPage = () => {
           time={new Date().getTime()}
         />
       </section> */}
-    </>
+    </main>
   );
 };
 

@@ -25,6 +25,11 @@
   background-color: #0b1d25;
 }
 
+/* default main styling */
+.main-div {
+  @apply pt-24 md:pt-28 px-7 md:px-10 lg:px-20 text-lit-dark;
+}
+
 /* blog styling */
 .kg-image {
   @apply mx-auto;

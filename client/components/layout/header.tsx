@@ -29,15 +29,18 @@ const Header: FC = () => {
   };
 
   useEffect(() => {
-    if (
-      isOpen &&
-      !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      )
-    ) {
-      document.body.style.overflow = "hidden";
-      document.body.style.paddingRight = "10px";
-      if (menuBtn.current) menuBtn.current.style.paddingRight = "10px";
+    if (isOpen) {
+      if (
+        !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        )
+      ) {
+        document.body.style.overflow = "hidden";
+        document.body.style.paddingRight = "10px";
+        if (menuBtn.current) menuBtn.current.style.paddingRight = "10px";
+      } else {
+        document.body.style.overflow = "hidden";
+      }
     } else {
       setTimeout(() => {
         document.body.removeAttribute("style");

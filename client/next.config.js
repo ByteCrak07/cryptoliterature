@@ -2,6 +2,11 @@
 module.exports = {
   reactStrictMode: true,
   images: {
-    domains: ["localhost", "static.ghost.org", "blog.cryptoliterature.in"],
+    domains: [
+      "localhost",
+      "static.ghost.org",
+      "blog.cryptoliterature.in",
+      "expertphotography.b-cdn.net",
+    ],
   },
 };

@@ -1,4 +1,5 @@
 import { ReactNode, FC } from "react";
+import Toast from "../general/toast";
 import Footer from "./footer";
 import Header from "./header";
 
@@ -11,11 +12,11 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     <>
       <Header />
 
-      <main className="pt-24 md:pt-28 px-7 md:px-10 lg:px-20 text-lit-dark">
-        {children}
-      </main>
+      {children}
 
       <Footer />
+
+      <Toast />
     </>
   );
 };

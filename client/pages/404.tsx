@@ -4,7 +4,7 @@ import Seo from "../components/general/seo";
 
 const ErrorPg: NextPage = () => {
   return (
-    <>
+    <main className="main-div">
       <Seo
         title="Coming soon | Cryptoliterature"
         description="Our website is coming soon"
@@ -12,7 +12,7 @@ const ErrorPg: NextPage = () => {
       />
 
       <ComingSoon />
-    </>
+    </main>
   );
 };
 

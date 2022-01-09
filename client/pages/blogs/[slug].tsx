@@ -76,18 +76,19 @@ const PostPage: NextPage<PostPageProps> = ({ post }) => {
 
   if (router.isFallback)
     return (
-      <>
+      <main className="main-div">
         <Seo
           title="Loading | Cryptoliterature"
           description="Loading..."
           path={null}
         />
+
         <ComingSoon />
-      </>
+      </main>
     );
 
   return (
-    <>
+    <main className="main-div">
       <Seo
         title={
           post.meta_title
@@ -193,7 +194,7 @@ const PostPage: NextPage<PostPageProps> = ({ post }) => {
           dangerouslySetInnerHTML={{ __html: post.html }}
         />
       </section>
-    </>
+    </main>
   );
 };
 

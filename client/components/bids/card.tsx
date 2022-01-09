@@ -2,7 +2,7 @@ import { FC } from "react";
 import RoundAvatar from "../general/round-avatar";
 
 interface CardProps {
-  selected: string;
+  selected?: string;
   genre: string;
   hash: string;
   title: string;
@@ -38,9 +38,13 @@ const Card: FC<CardProps> = ({
 }) => {
   return (
     <div
-      className={`container inline-block w-80 h-76 rounded-lg border-gray-300 border font-Poppins ${
+      className={`w-80 rounded-lg border-2 border-lit-dark border-opacity-10 font-Poppins overflow-hidden ${
         uploadedIn ? "bg-gray-100" : ""
-      } ${selected == genre || selected == "All" ? "" : "hidden"}`}
+      } ${
+        selected === genre || selected === "All" || selected === undefined
+          ? ""
+          : "hidden"
+      }`}
     >
       <div className="px-2">
         <div className="genre-hash flex p-2 justify-between">
@@ -59,11 +63,11 @@ const Card: FC<CardProps> = ({
           </section>
         </div>
       </div>
-      {currentBid ? "" : <hr className="w-11/12 mx-auto" />}
+      <hr className="w-11/12 mx-auto" />
       <div
-        className={`p-5 px-4 rounded-b-lg ${
+        className={`p-5 px-4 ${
           currentBid ? "bg-lit-dark text-white" : ""
-        } w flex justify-between items-center text-6x1`}
+        } flex justify-between items-center text-6x1`}
       >
         {(() => {
           if (currentBid) {
