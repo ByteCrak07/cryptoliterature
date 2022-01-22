@@ -40,3 +40,7 @@ yarn-error.log*
 # sitemap
 /public/sitemap.xml
 /public/robots.txt
+
+
+# ckeditor
+/ckeditor5/node_modules

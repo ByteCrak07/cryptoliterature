@@ -42,7 +42,7 @@ const Profile: NextPage = () => {
   };
 
   // states
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [tabs, setTabs] = useState<Array<string>>(["Created", "Collected"]);
   const BiddingTabs = ["Ongoing", "Completed"];
   const [selectedTab, setSelectedTab] = useState<number>(0);
@@ -295,7 +295,7 @@ const Profile: NextPage = () => {
 
               {/* more bio */}
               <div className="mt-8 border-t border-lit-dark border-opacity-10">
-                <div className="mt-3 px-2 flex justify-between text-lit-light-dark font-OpenSans font-bold text-sm">
+                <div className="mt-3 px-2 flex justify-between text-lit-gray font-OpenSans font-bold text-sm">
                   <div>Joined</div>
                   <div>{userData.joined_on}</div>
                 </div>

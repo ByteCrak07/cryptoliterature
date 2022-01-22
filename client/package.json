@@ -9,22 +9,26 @@
     "postbuild": "cross-env next-sitemap"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-react": "^1.1.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-brands-svg-icons": "^5.15.4",
     "@fortawesome/free-regular-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/react-fontawesome": "^0.1.16",
     "@tryghost/content-api": "^1.5.14",
+    "ckeditor5-custom-build": "file:ckeditor5",
     "ga-4-react": "^0.1.281",
     "lodash": "^4.17.21",
     "next": "12.0.3",
     "next-sitemap": "^1.6.203",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-easy-crop": "^4.0.1",
     "swiper": "^7.2.0"
   },
   "devDependencies": {
     "@tailwindcss/line-clamp": "^0.2.2",
+    "@tailwindcss/typography": "^0.4.1",
     "@types/lodash": "^4.14.176",
     "@types/node": "16.11.7",
     "@types/react": "17.0.34",

@@ -3,7 +3,7 @@ import GA4React from "ga-4-react";
 
 let ga4react: GA4React;
 
-export async function init(G) {
+export async function init(G: any) {
   if (!GA4React.isInitialized() && G && process.browser) {
     ga4react = new GA4React(G, { debug_mode: !process.env.production });
 

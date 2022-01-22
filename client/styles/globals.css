@@ -30,6 +30,47 @@
   @apply pt-24 md:pt-28 px-7 md:px-10 lg:px-20 text-lit-dark;
 }
 
+/* ckeditor custom styles */
+.ck-sticky-panel__content_sticky {
+  @apply top-20 md:top-24 !important;
+}
+
+.ck-placeholder:before,
+.ck-button__label {
+  @apply font-Poppins !important;
+}
+
+.ck-focused {
+  @apply border border-lit-dark !important;
+}
+
+.ck-editor__main {
+  @apply prose xl:prose-xl max-w-none;
+}
+
+.ck-editor__main > div {
+  @apply px-6 !important;
+  min-height: 120.54px;
+}
+
+.ck-editor__main ul > li,
+.ck-editor__main ol > li {
+  @apply ml-3 pl-1;
+}
+
+.ck-editor__main ul > li::before,
+.ck-editor__main ol > li::before {
+  content: none;
+}
+
+.ck-editor__main ul {
+  list-style: disc;
+}
+
+.ck-editor__main ol {
+  list-style: decimal;
+}
+
 /* blog styling */
 .kg-image {
   @apply mx-auto;
