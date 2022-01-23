@@ -3,10 +3,8 @@
 @tailwind utilities;
 
 @layer utilities {
-  @variants hover {
-    .text-shadow {
-      text-shadow: 1px 3px 2px #0b1d2569;
-    }
+  .text-shadow {
+    text-shadow: 1px 3px 2px #0b1d2569;
   }
 }
 
