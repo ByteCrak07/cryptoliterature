@@ -23,9 +23,13 @@
   background-color: #0b1d25;
 }
 
+#__next {
+  @apply h-screen flex flex-col;
+}
+
 /* default main styling */
 .main-div {
-  @apply pt-24 md:pt-28 px-7 md:px-10 lg:px-20 text-lit-dark;
+  @apply pt-24 md:pt-28 px-7 md:px-10 lg:px-20 text-lit-dark flex-1;
 }
 
 /* ckeditor custom styles */

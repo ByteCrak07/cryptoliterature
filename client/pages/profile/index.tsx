@@ -57,6 +57,7 @@ const Profile: NextPage = () => {
     // applying overlay and changing bg color of header
     let header = document.getElementById("nav-header");
     header?.classList.add("bg-lit-light-gray");
+    header?.classList.remove("bg-white");
 
     let profilePic = document.getElementById("profile-pic");
     let profileOverlay = document.getElementById("profile-overlay");
@@ -74,6 +75,7 @@ const Profile: NextPage = () => {
 
     return () => {
       header?.classList.remove("bg-lit-light-gray");
+      header?.classList.add("bg-white");
     };
   }, []);
 

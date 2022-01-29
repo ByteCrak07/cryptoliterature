@@ -160,7 +160,7 @@ const NewBlog: NextPage = () => {
               ref={articleReference}
               placeholder="Article Reference"
               defaultValue={blogData.article_reference}
-              className="focus:outline-none w-full py-2 px-3 rounded-md border border-lit-dark border-opacity-20 focus:shadow focus:ring-1 focus:ring-lit-dark"
+              className="outline-none w-full py-2 px-3 rounded-md border border-lit-dark border-opacity-20 focus:shadow focus:ring-1 focus:ring-lit-dark"
             />
           </div>
         </div>

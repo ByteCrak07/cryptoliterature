@@ -27,6 +27,7 @@
     "swiper": "^7.2.0"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.4.0",
     "@tailwindcss/line-clamp": "^0.3.1",
     "@tailwindcss/typography": "^0.5.0",
     "@types/lodash": "^4.14.176",
