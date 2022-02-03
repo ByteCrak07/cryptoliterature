@@ -2,6 +2,8 @@ import type { NextPage } from "next";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+// types
+import { UserProfile } from "../../interfaces/profile";
 // components
 import Seo from "../../components/general/seo";
 import Card from "../../components/bids/card";
@@ -11,7 +13,7 @@ import { showToast } from "../../components/general/toast";
 
 const Profile: NextPage = () => {
   // dummy data
-  const userData = {
+  const userData: UserProfile = {
     name: "Kiatanan Iamchan",
     profile_name: "@kiatanan",
     profile_id: "#00833",
@@ -42,7 +44,7 @@ const Profile: NextPage = () => {
   };
 
   // states
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
   const [tabs, setTabs] = useState<Array<string>>(["Created", "Collected"]);
   const BiddingTabs = ["Ongoing", "Completed"];
   const [selectedTab, setSelectedTab] = useState<number>(0);
@@ -66,7 +68,7 @@ const Profile: NextPage = () => {
     const applyOverlay = () => {
       if (header && profilePic && profileOverlay) {
         overlayHeight = header.offsetHeight + 50 + profilePic.offsetHeight / 2;
-        profileOverlay.style.height = overlayHeight.toString() + "px";
+        profileOverlay.style.minHeight = overlayHeight.toString() + "px";
       }
     };
 
@@ -76,6 +78,7 @@ const Profile: NextPage = () => {
     return () => {
       header?.classList.remove("bg-lit-light-gray");
       header?.classList.add("bg-white");
+      window.removeEventListener("resize", applyOverlay);
     };
   }, []);
 
@@ -210,7 +213,7 @@ const Profile: NextPage = () => {
                           width={18}
                         />
                       </span>
-                      &nbsp; Buy me a Coffee
+                      &nbsp; Tip some crypto
                     </a>
                   ) : null}
                 </div>

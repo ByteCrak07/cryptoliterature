@@ -34,7 +34,7 @@
 
 /* ckeditor custom styles */
 .ck-sticky-panel__content_sticky {
-  @apply top-20 md:top-24 !important;
+  @apply top-20 !important;
 }
 
 .ck-placeholder:before,
@@ -47,12 +47,24 @@
 }
 
 .ck-editor__main {
-  @apply prose xl:prose-xl max-w-none;
+  @apply prose lg:prose-lg xl:prose-xl max-w-none w-full;
 }
 
 .ck-editor__main > div {
-  @apply px-6 !important;
-  min-height: 120.54px;
+  @apply py-10 !important;
+}
+
+.ck-editor__main > div > * {
+  @apply mx-auto !important;
+  max-width: 1080px;
+}
+
+.ck-editor__main > .ck-source-editing-area {
+  @apply py-0 !important;
+}
+
+.ck-editor__main > .ck-source-editing-area > * {
+  max-width: none;
 }
 
 .ck-editor__main ul > li,

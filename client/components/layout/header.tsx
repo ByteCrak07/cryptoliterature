@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 // styles
 import styles from "../../styles/Header.module.css";
+import WalletModal from "./walletModal";
 
 const Header: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -58,9 +59,17 @@ const Header: FC = () => {
       "scroll",
       throttle(() => {
         if (window.scrollY > 0) {
-          document.querySelector("#nav-header")?.classList.add("shadow");
+          document
+            .querySelector("#nav-header")
+            ?.classList.add("border-b", "border-lit-dark", "border-opacity-10");
         } else {
-          document.querySelector("#nav-header")?.classList.remove("shadow");
+          document
+            .querySelector("#nav-header")
+            ?.classList.remove(
+              "border-b",
+              "border-lit-dark",
+              "border-opacity-10"
+            );
         }
       }, 200)
     );
@@ -76,7 +85,7 @@ const Header: FC = () => {
   return (
     <header
       id="nav-header"
-      className="fixed bg-white top-0 left-0 right-0 z-10 py-5 md:py-7 px-7 md:px-10 lg:px-20 flex justify-between"
+      className="fixed bg-white top-0 left-0 right-0 z-50 py-5 md:py-7 px-7 md:px-10 lg:px-20 flex justify-between"
     >
       <Link href="/">
         <a>
@@ -87,24 +96,6 @@ const Header: FC = () => {
       {/* horizontal navbar */}
       <nav className="hidden lg:flex items-center">
         <ul className="flex items-center font-Poppins font-medium">
-          <li className="mx-4">
-            <Link href="/wallet">
-              <a className={`flex items-center ${styles.menu}`}>
-                <div
-                  className="bg-lit-dark h-5 w-5 rounded-full flex items-center justify-center"
-                  style={{ padding: 6 }}
-                >
-                  <FontAwesomeIcon
-                    className="inline text-white"
-                    icon={faPlus}
-                    size="xs"
-                  />
-                </div>
-                &nbsp;
-                <span>Add&nbsp;wallet</span>
-              </a>
-            </Link>
-          </li>
           <li className="mx-4">
             <Link href="/bids">
               <a className={`${styles.menu}`}>Bids</a>
@@ -121,18 +112,24 @@ const Header: FC = () => {
             </Link>
           </li>
           <li
-            className="border-l-2 border-lit-dark border-opacity-30 h-6"
+            className="border-l-2 mx-4 border-lit-dark border-opacity-30 h-6"
             aria-hidden="true"
           ></li>
           <li className="mx-4">
-            <Link href="/login">
-              <a className={`${styles.menu}`}>Login</a>
-            </Link>
-          </li>
-          <li>
-            <Link href="/sign-up">
-              <a className="py-2 px-5 border border-lit-dark rounded-full transition-colors hover:bg-lit-dark hover:text-white">
-                Sign&nbsp;up
+            <Link href="/wallet">
+              <a className={`flex items-center ${styles.menu}`}>
+                <div
+                  className="bg-lit-dark h-5 w-5 rounded-full flex items-center justify-center"
+                  style={{ padding: 6 }}
+                >
+                  <FontAwesomeIcon
+                    className="inline text-white"
+                    icon={faPlus}
+                    size="xs"
+                  />
+                </div>
+                &nbsp;
+                <span>Add&nbsp;wallet</span>
               </a>
             </Link>
           </li>
@@ -173,7 +170,7 @@ const Header: FC = () => {
 
       {/* side navbar */}
       <div
-        className={`sidebar bg-white lg:hidden w-60 fixed right-0 top-0 bottom-0 transition duration-500 transform ${
+        className={`sidebar bg-white lg:hidden w-60 fixed right-0 top-0 bottom-0 transition duration-500 rounded-l-xl transform ${
           !isOpen ? "translate-x-full" : ""
         }`}
       >
@@ -191,23 +188,6 @@ const Header: FC = () => {
             </Link>
           </div>
           <ul className="flex flex-col items-center font-Poppins font-medium">
-            <li className="my-4">
-              <Link href="/wallet">
-                <a className={`flex items-center ${styles.menu}`}>
-                  <div
-                    className="bg-lit-dark h-5 w-5 rounded-full flex items-center justify-center"
-                    style={{ padding: 6 }}
-                  >
-                    <FontAwesomeIcon
-                      className="inline text-white"
-                      icon={faPlus}
-                    />
-                  </div>
-                  &nbsp;
-                  <span>Add&nbsp;wallet</span>
-                </a>
-              </Link>
-            </li>
             <li className="my-4">
               <Link href="/bids">
                 <a className={`${styles.menu}`}>Bids</a>
@@ -228,20 +208,27 @@ const Header: FC = () => {
               aria-hidden="true"
             ></li>
             <li className="my-4">
-              <Link href="/login">
-                <a className={`${styles.menu}`}>Login</a>
-              </Link>
-            </li>
-            <li className="my-4">
-              <Link href="/sign-up">
-                <a className="py-2 px-5 border border-lit-dark rounded-full hover:bg-lit-dark hover:text-white">
-                  Sign&nbsp;up
+              <Link href="/wallet">
+                <a className={`flex items-center ${styles.menu}`}>
+                  <div
+                    className="bg-lit-dark h-5 w-5 rounded-full flex items-center justify-center"
+                    style={{ padding: 6 }}
+                  >
+                    <FontAwesomeIcon
+                      className="inline text-white"
+                      icon={faPlus}
+                    />
+                  </div>
+                  &nbsp;
+                  <span>Add&nbsp;wallet</span>
                 </a>
               </Link>
             </li>
           </ul>
         </nav>
       </div>
+
+      {/* <WalletModal /> */}
     </header>
   );
 };

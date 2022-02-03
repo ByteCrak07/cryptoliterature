@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FC, MouseEvent, useRef } from "react";
+import { FC, MouseEvent, TouchEvent, useRef } from "react";
 
 interface CustomInputSliderProps {
   value: number;
@@ -34,14 +34,26 @@ const CustomInputSlider: FC<CustomInputSliderProps> = ({
 
     handleMouseMove(e);
     document.onmousemove = handleMouseMove;
-    document.onmouseup = handleMouseUp;
+    document.onmouseup = handleMouseTouchUp;
   };
 
-  const handleMouseUp = (e: globalThis.MouseEvent) => {
+  const handleTouchDown = (e: TouchEvent<HTMLDivElement>) => {
+    // e.preventDefault();
+
+    handleTouchMove(e);
+    document.ontouchmove = handleTouchMove;
+    document.ontouchend = handleMouseTouchUp;
+  };
+
+  const handleMouseTouchUp = (
+    e: globalThis.MouseEvent | globalThis.TouchEvent
+  ) => {
     e.preventDefault();
 
     document.onmousemove = null;
+    document.ontouchmove = null;
     document.onmouseup = null;
+    document.ontouchend = null;
   };
 
   const handleMouseMove = (
@@ -59,6 +71,28 @@ const CustomInputSlider: FC<CustomInputSliderProps> = ({
         } else if (sliderLeft <= 0) {
           handleSliderChange(0, rect);
         } else if (rect.right <= e.clientX) {
+          rangeSlider.current.style.left = `${rect.right - rect.left}px`;
+          handleSliderChange(rect.right - rect.left, rect);
+        }
+      }
+    }
+  };
+
+  const handleTouchMove = (
+    e: globalThis.TouchEvent | TouchEvent<HTMLDivElement>
+  ) => {
+    // e.preventDefault();
+
+    if (rangeSlider.current) {
+      let rect = rangeSlider.current.parentElement?.getBoundingClientRect();
+      if (rect) {
+        let sliderLeft = e.touches[0].clientX - rect.left;
+
+        if (sliderLeft > 0 && rect.right > e.touches[0].clientX) {
+          handleSliderChange(sliderLeft, rect);
+        } else if (sliderLeft <= 0) {
+          handleSliderChange(0, rect);
+        } else if (rect.right <= e.touches[0].clientX) {
           rangeSlider.current.style.left = `${rect.right - rect.left}px`;
           handleSliderChange(rect.right - rect.left, rect);
         }
@@ -105,7 +139,11 @@ const CustomInputSlider: FC<CustomInputSliderProps> = ({
 
   return (
     <div className="flex flex-col w-32 sm:w-64 m-auto items-center justify-center">
-      <div className="py-1 relative min-w-full" onMouseDown={handleMouseDown}>
+      <div
+        className="py-1 relative min-w-full touch-none"
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchDown}
+      >
         <div className="h-2 bg-gray-200 rounded-full">
           <div
             className="absolute h-2 rounded-full bg-lit-dark w-0"
@@ -122,8 +160,10 @@ const CustomInputSlider: FC<CustomInputSliderProps> = ({
                     className="bg-lit-dark -mt-8 text-white truncate text-xs rounded py-1 px-4"
                     ref={rangeSliderValue}
                   >
-                    {value.toFixed(noOfDecimalPlaces)}
-                    {unit}
+                    <span className="pointer-events-none">
+                      {value.toFixed(noOfDecimalPlaces)}
+                      {unit}
+                    </span>
                   </div>
                   <svg
                     className="absolute text-black w-full h-2 left-0 top-100"

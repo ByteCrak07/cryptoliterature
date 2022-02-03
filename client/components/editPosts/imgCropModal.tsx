@@ -1,7 +1,7 @@
 import { FC, useEffect } from "react";
 import { useState, useCallback } from "react";
 import Cropper from "react-easy-crop";
-import getCroppedImg from "../../lib/cropImage";
+import getCroppedImg from "../../lib/general/cropImage";
 import CustomInputSlider from "./customInputSlider";
 
 interface ImgCropModalProps {
@@ -71,7 +71,7 @@ const ImgCropModal: FC<ImgCropModalProps> = ({ imgUrl, closeModal }) => {
                 crop={crop}
                 zoom={zoom}
                 rotation={rotation}
-                aspect={4 / 3}
+                aspect={1.8}
                 onCropChange={setCrop}
                 onCropComplete={onCropComplete}
                 onZoomChange={setZoom}

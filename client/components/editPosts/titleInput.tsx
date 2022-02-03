@@ -2,16 +2,16 @@ import { FC, RefObject } from "react";
 
 interface TitleInputProps {
   id: string;
-  forwardedRef: RefObject<HTMLInputElement>;
-  defaultValue: string;
+  value: string;
+  onChange: (value: string) => void;
   placeholder: string;
   maxLength: number;
 }
 
 const TitleInput: FC<TitleInputProps> = ({
   id,
-  forwardedRef,
-  defaultValue,
+  value,
+  onChange,
   placeholder,
   maxLength,
 }) => {
@@ -20,17 +20,14 @@ const TitleInput: FC<TitleInputProps> = ({
       <div className="relative headingInp mb-3">
         <input
           id={id}
-          ref={forwardedRef}
           type="text"
-          defaultValue={defaultValue}
+          value={value}
           className="font-medium focus:outline-none w-full text-xl"
           placeholder={placeholder}
           onFocus={(e) => e.target.parentElement?.classList.add("active")}
           onBlur={(e) => e.target.parentElement?.classList.remove("active")}
           onChange={(e) => {
-            let count = document.getElementById(`${id}count`);
-            if (count)
-              count.innerText = `${e.target.value.length}/${maxLength}`;
+            onChange(e.target.value);
           }}
           maxLength={maxLength}
         />
@@ -63,8 +60,8 @@ const TitleInput: FC<TitleInputProps> = ({
           }
         `}</style>
       </div>
-      <div id={`${id}count`} className="text-right text-lit-gray">
-        {`${defaultValue.length}`}/{maxLength}
+      <div className="text-right text-lit-gray">
+        {`${value.length}`}/{maxLength}
       </div>
     </>
   );

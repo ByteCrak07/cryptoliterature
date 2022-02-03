@@ -11,7 +11,8 @@ import ComingSoon from "../../components/general/coming-soon";
 // styles
 import blogPostStyles from "../../styles/BlogPost.module.css";
 // ghost api
-import { getSinglePost, getPosts } from "../../lib/posts";
+import { GhostPost } from "../../interfaces/posts";
+import { getSinglePost, getPosts } from "../../lib/ghost/posts";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getPosts();
@@ -40,27 +41,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 };
 
 interface PostPageProps {
-  post: {
-    title: string;
-    excerpt: string;
-    custom_excerpt: string;
-    slug: string;
-    html: string;
-    feature_image?: string;
-    feature_image_alt?: string;
-    featured: boolean;
-    primary_author: { profile_image?: string; name?: string };
-    published_at: string;
-    reading_time: number;
-    meta_title: string;
-    meta_description: string;
-    og_title: string;
-    og_description: string;
-    og_image: string;
-    twitter_title: string;
-    twitter_description: string;
-    twitter_image: string;
-  };
+  post: GhostPost;
 }
 
 const PostPage: NextPage<PostPageProps> = ({ post }) => {
