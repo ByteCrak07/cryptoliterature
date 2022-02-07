@@ -37,7 +37,8 @@ const EditPost: NextPage = () => {
     genre: ["story", "romance"],
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ",
-    primary_author: {
+    author: {
+      profile_id: 123,
       profile_image: "",
       name: "",
     },
@@ -295,7 +296,11 @@ const EditPost: NextPage = () => {
 
         {/* img crop modal */}
         {showCropModal ? (
-          <ImgCropModal imgUrl={tempImgUrl} closeModal={closeCropModal} />
+          <ImgCropModal
+            aspect={1.8}
+            imgUrl={tempImgUrl}
+            closeModal={closeCropModal}
+          />
         ) : null}
       </main>
     </>

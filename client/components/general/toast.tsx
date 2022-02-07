@@ -22,7 +22,7 @@ const Toast: FC = () => {
   return (
     <>
       {message ? (
-        <div className="toast fixed whitespace-nowrap opacity-0 text-white rounded-full bg-lit-dark px-4 py-2 -bottom-2 left-1/2 transform -translate-x-1/2">
+        <div className="toast fixed z-50 whitespace-nowrap opacity-0 text-white rounded-full bg-lit-dark px-4 py-2 -bottom-2 left-1/2 transform -translate-x-1/2">
           {message}
         </div>
       ) : null}

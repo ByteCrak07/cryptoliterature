@@ -5,6 +5,7 @@ import getCroppedImg from "../../lib/general/cropImage";
 import CustomInputSlider from "./customInputSlider";
 
 interface ImgCropModalProps {
+  aspect: number;
   imgUrl: string;
   closeModal: (croppedImgUrl: string | null) => void;
 }
@@ -16,7 +17,11 @@ interface CroppedAreaPixels {
   height: number;
 }
 
-const ImgCropModal: FC<ImgCropModalProps> = ({ imgUrl, closeModal }) => {
+const ImgCropModal: FC<ImgCropModalProps> = ({
+  aspect,
+  imgUrl,
+  closeModal,
+}) => {
   // states
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -71,7 +76,7 @@ const ImgCropModal: FC<ImgCropModalProps> = ({ imgUrl, closeModal }) => {
                 crop={crop}
                 zoom={zoom}
                 rotation={rotation}
-                aspect={1.8}
+                aspect={aspect}
                 onCropChange={setCrop}
                 onCropComplete={onCropComplete}
                 onZoomChange={setZoom}

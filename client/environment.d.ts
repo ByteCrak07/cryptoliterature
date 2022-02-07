@@ -1,4 +1,10 @@
+import { MetaMaskInpageProvider } from "@metamask/providers";
+
 declare global {
+  interface Window {
+    ethereum?: MetaMaskInpageProvider;
+  }
+
   namespace NodeJS {
     interface ProcessEnv {
       SITE_URL: string;

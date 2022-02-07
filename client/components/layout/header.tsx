@@ -1,23 +1,26 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import throttle from "lodash/throttle";
-// icons
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 // styles
 import styles from "../../styles/Header.module.css";
+// components
 import WalletModal from "./walletModal";
+import AuthBtn from "./authBtn";
 
 const Header: FC = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  // states
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const [isWalletModalOpen, setIsWalletModalOpen] = useState<boolean>(false);
   const menuBtn = useRef<HTMLDivElement>(null);
 
+  // router
   const router = useRouter();
 
+  // functions
   const closeSideBar = () => {
-    setIsOpen(false);
+    setIsSidebarOpen(false);
   };
 
   const setActiveLink = () => {
@@ -30,7 +33,7 @@ const Header: FC = () => {
   };
 
   useEffect(() => {
-    if (isOpen) {
+    if (isSidebarOpen) {
       if (
         !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
           navigator.userAgent
@@ -48,7 +51,7 @@ const Header: FC = () => {
         if (menuBtn.current) menuBtn.current.removeAttribute("style");
       }, 500);
     }
-  }, [isOpen]);
+  }, [isSidebarOpen]);
 
   useEffect(() => {
     document.querySelectorAll(".sidebar a").forEach((ele) => {
@@ -94,7 +97,7 @@ const Header: FC = () => {
       </Link>
 
       {/* horizontal navbar */}
-      <nav className="hidden lg:flex items-center">
+      <nav className="hidden lg:flex items-center text-lit-dark">
         <ul className="flex items-center font-Poppins font-medium">
           <li className="mx-4">
             <Link href="/bids">
@@ -116,22 +119,12 @@ const Header: FC = () => {
             aria-hidden="true"
           ></li>
           <li className="mx-4">
-            <Link href="/wallet">
-              <a className={`flex items-center ${styles.menu}`}>
-                <div
-                  className="bg-lit-dark h-5 w-5 rounded-full flex items-center justify-center"
-                  style={{ padding: 6 }}
-                >
-                  <FontAwesomeIcon
-                    className="inline text-white"
-                    icon={faPlus}
-                    size="xs"
-                  />
-                </div>
-                &nbsp;
-                <span>Add&nbsp;wallet</span>
-              </a>
-            </Link>
+            <AuthBtn
+              style={styles.walletBtn}
+              openModal={() => {
+                setIsWalletModalOpen(true);
+              }}
+            />
           </li>
         </ul>
       </nav>
@@ -141,10 +134,10 @@ const Header: FC = () => {
         <div className="absolute z-20 left-0 top-0 transform -translate-x-full translate-y-1/4">
           <button
             className={`flex ${styles.wrapperMenu} ${
-              isOpen ? styles.open : ""
+              isSidebarOpen ? styles.open : ""
             }`}
             onClick={() => {
-              setIsOpen(!isOpen);
+              setIsSidebarOpen(!isSidebarOpen);
             }}
           >
             <div
@@ -161,17 +154,17 @@ const Header: FC = () => {
       {/* sidenav overlay */}
       <div
         className={`fixed lg:hidden inset-0 bg-lit-dark transition duration-500 bg-opacity-30 transform ${
-          !isOpen ? "translate-x-full" : ""
+          !isSidebarOpen ? "translate-x-full" : ""
         }`}
         onClick={() => {
-          setIsOpen(false);
+          closeSideBar();
         }}
       ></div>
 
       {/* side navbar */}
       <div
         className={`sidebar bg-white lg:hidden w-60 fixed right-0 top-0 bottom-0 transition duration-500 rounded-l-xl transform ${
-          !isOpen ? "translate-x-full" : ""
+          !isSidebarOpen ? "translate-x-full" : ""
         }`}
       >
         <nav>
@@ -208,27 +201,26 @@ const Header: FC = () => {
               aria-hidden="true"
             ></li>
             <li className="my-4">
-              <Link href="/wallet">
-                <a className={`flex items-center ${styles.menu}`}>
-                  <div
-                    className="bg-lit-dark h-5 w-5 rounded-full flex items-center justify-center"
-                    style={{ padding: 6 }}
-                  >
-                    <FontAwesomeIcon
-                      className="inline text-white"
-                      icon={faPlus}
-                    />
-                  </div>
-                  &nbsp;
-                  <span>Add&nbsp;wallet</span>
-                </a>
-              </Link>
+              <AuthBtn
+                skipAutoLogin
+                style={styles.walletBtnDark}
+                openModal={() => {
+                  closeSideBar();
+                  setIsWalletModalOpen(true);
+                }}
+              />
             </li>
           </ul>
         </nav>
       </div>
 
-      {/* <WalletModal /> */}
+      {isWalletModalOpen ? (
+        <WalletModal
+          close={() => {
+            setIsWalletModalOpen(false);
+          }}
+        />
+      ) : null}
     </header>
   );
 };

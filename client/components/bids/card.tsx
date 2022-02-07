@@ -48,19 +48,17 @@ const Card: FC<CardProps> = ({
     >
       <div className="px-2">
         <div className="genre-hash flex p-2 justify-between">
-          <section className="p-1 px-2 my-2 bg-gray-200 rounded-full text-sm font-normal">
+          <div className="p-1 px-2 my-2 flex items-center bg-gray-200 rounded-full text-sm font-normal">
             {genre}
-          </section>
-          <section className="p-1 m-2 font-medium">{hash}</section>
+          </div>
+          <div className="p-1 m-2 font-medium">{hash}</div>
         </div>
         <div className="title-avatar p-2 my-auto h-36 flex flex-col justify-center">
-          <section className="font-bold text-2xl font-Merriweather">
-            {title}
-          </section>
-          <section className="flex justify-start my-5">
+          <div className="font-bold text-2xl font-Merriweather">{title}</div>
+          <div className="flex justify-start my-5">
             <RoundAvatar image={avatar} alt={name} />
             <span className="ml-2 font-medium">{name}</span>
-          </section>
+          </div>
         </div>
       </div>
       <hr className="w-11/12 mx-auto" />
@@ -73,24 +71,24 @@ const Card: FC<CardProps> = ({
           if (currentBid) {
             return (
               <>
-                <section className="pr-2">
+                <div className="pr-2">
                   <h5 className="font-light">Current Bid</h5>
                   <p className="font-semibold">{currentBid}</p>
-                </section>
-                <section className="pr-4">
+                </div>
+                <div className="pr-4">
                   <h5 className="font-light">Ending In</h5>
                   <p className="font-medium">{endingIn}</p>
-                </section>
+                </div>
               </>
             );
           } else if (soldFor) {
             return (
               <>
-                <section className="pr-4">
+                <div className="pr-4">
                   <h5 className="font-light">Sold For</h5>
                   <p className="font-semibold">{soldFor}</p>
-                </section>
-                <section className="pr-4">
+                </div>
+                <div className="pr-4">
                   <h5 className="font-light">Owned By</h5>
                   <span className="flex align-middle">
                     <RoundAvatar image={ownedByAvatar} alt={ownedBy} />
@@ -98,19 +96,19 @@ const Card: FC<CardProps> = ({
                       {ownedBy?.substring(0, 9) + ".."}
                     </span>
                   </span>
-                </section>
+                </div>
               </>
             );
           } else if (uploadedIn) {
             return (
-              <section>
+              <div>
                 <h5 className="font-light">Uploaded In</h5>
                 <p className="font-medium">{uploadedIn}</p>
-              </section>
+              </div>
             );
           } else if (ownedBy) {
             return (
-              <section>
+              <div>
                 <h5 className="font-light">Owned By</h5>
                 <span className="flex align-middle">
                   <RoundAvatar image={ownedByAvatar} alt={ownedBy} />
@@ -118,16 +116,16 @@ const Card: FC<CardProps> = ({
                     {ownedBy.substring(0, 9) + ".."}
                   </span>
                 </span>
-              </section>
+              </div>
             );
           } else if (reservePrice) {
             return (
               <>
-                <section className="">
+                <div className="">
                   <h5 className="font-light">Reserve Price</h5>
                   <p className="font-medium">{reservePrice}</p>
-                </section>
-                <section className="">
+                </div>
+                <div className="">
                   <h5 className="font-light">Listed By</h5>
                   <span className="flex align-middle">
                     <RoundAvatar image={listedByAvatar} alt={listedBy} />
@@ -135,7 +133,7 @@ const Card: FC<CardProps> = ({
                       {listedBy?.substring(0, 9) + ".."}
                     </span>
                   </span>
-                </section>
+                </div>
               </>
             );
           }

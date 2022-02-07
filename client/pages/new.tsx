@@ -15,6 +15,7 @@ const ErrorPg: NextPage = () => {
   // creating new post
   const createPost = () => {
     console.log("create post");
+    // TODO: api for creating new post
   };
 
   return (
@@ -43,7 +44,7 @@ const ErrorPg: NextPage = () => {
                 setTitle(e.target.value);
               }}
               placeholder="Title"
-              className="outline-none w-full py-2 px-3 rounded-md border border-lit-dark border-opacity-20 focus:shadow focus:ring-1 focus:ring-lit-dark"
+              className="outline-none font-medium w-full py-2 px-3 rounded-md border border-lit-dark border-opacity-20 focus:shadow focus:ring-1 focus:ring-lit-dark"
               maxLength={100}
             />
 

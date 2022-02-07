@@ -1,4 +1,5 @@
 import { ReactNode, FC } from "react";
+import WalletAuthWrapper from "../../contexts/walletAuthWrapper";
 import Toast from "../general/toast";
 import Footer from "./footer";
 import Header from "./header";
@@ -9,7 +10,7 @@ interface LayoutProps {
 
 const Layout: FC<LayoutProps> = ({ children }) => {
   return (
-    <>
+    <WalletAuthWrapper>
       <Header />
 
       {children}
@@ -17,7 +18,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
       <Footer />
 
       <Toast />
-    </>
+    </WalletAuthWrapper>
   );
 };
 

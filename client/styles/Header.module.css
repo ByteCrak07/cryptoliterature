@@ -66,3 +66,25 @@
 .open .lineMenu.end {
   transform: rotate(-90deg) translateX(-3px);
 }
+
+/* wallet btn */
+.walletBtn,
+.walletBtnDark {
+  @apply flex items-center font-medium px-4 py-2 rounded-full bg-white overflow-hidden relative;
+  box-shadow: 2px 2px 6px 0px #00000040;
+}
+
+.walletBtn:hover,
+.walletBtnDark {
+  @apply bg-lit-dark text-white;
+}
+
+.walletBtn:hover > div,
+.walletBtnDark > div {
+  @apply bg-white;
+}
+
+.walletBtn:hover path,
+.walletBtnDark path {
+  @apply fill-lit-dark;
+}

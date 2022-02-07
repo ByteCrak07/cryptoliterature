@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2014-2022, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2014-2022, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 import ClassicEditor from "@ckeditor/ckeditor5-editor-classic/src/classiceditor.js";
@@ -7,10 +7,8 @@ import Alignment from "@ckeditor/ckeditor5-alignment/src/alignment.js";
 import Autoformat from "@ckeditor/ckeditor5-autoformat/src/autoformat.js";
 import AutoImage from "@ckeditor/ckeditor5-image/src/autoimage.js";
 import AutoLink from "@ckeditor/ckeditor5-link/src/autolink.js";
-import Base64UploadAdapter from "@ckeditor/ckeditor5-upload/src/adapters/base64uploadadapter.js";
 import BlockQuote from "@ckeditor/ckeditor5-block-quote/src/blockquote.js";
 import Bold from "@ckeditor/ckeditor5-basic-styles/src/bold.js";
-import CloudServices from "@ckeditor/ckeditor5-cloud-services/src/cloudservices.js";
 import Code from "@ckeditor/ckeditor5-basic-styles/src/code.js";
 import CodeBlock from "@ckeditor/ckeditor5-code-block/src/codeblock.js";
 import DataFilter from "@ckeditor/ckeditor5-html-support/src/datafilter.js";
@@ -40,14 +38,16 @@ import Italic from "@ckeditor/ckeditor5-basic-styles/src/italic.js";
 import Link from "@ckeditor/ckeditor5-link/src/link.js";
 import LinkImage from "@ckeditor/ckeditor5-link/src/linkimage.js";
 import List from "@ckeditor/ckeditor5-list/src/list.js";
-import ListStyle from "@ckeditor/ckeditor5-list/src/liststyle.js";
+import ListProperties from "@ckeditor/ckeditor5-list/src/listproperties.js";
 import Markdown from "@ckeditor/ckeditor5-markdown-gfm/src/markdown.js";
 import MediaEmbed from "@ckeditor/ckeditor5-media-embed/src/mediaembed.js";
 import MediaEmbedToolbar from "@ckeditor/ckeditor5-media-embed/src/mediaembedtoolbar.js";
 import Mention from "@ckeditor/ckeditor5-mention/src/mention.js";
+import PageBreak from "@ckeditor/ckeditor5-page-break/src/pagebreak.js";
 import Paragraph from "@ckeditor/ckeditor5-paragraph/src/paragraph.js";
 import PasteFromOffice from "@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice.js";
 import RemoveFormat from "@ckeditor/ckeditor5-remove-format/src/removeformat.js";
+import SimpleUploadAdapter from "@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter.js";
 import SourceEditing from "@ckeditor/ckeditor5-source-editing/src/sourceediting.js";
 import SpecialCharacters from "@ckeditor/ckeditor5-special-characters/src/specialcharacters.js";
 import SpecialCharactersArrows from "@ckeditor/ckeditor5-special-characters/src/specialcharactersarrows.js";
@@ -69,6 +69,7 @@ import TextPartLanguage from "@ckeditor/ckeditor5-language/src/textpartlanguage.
 import TextTransformation from "@ckeditor/ckeditor5-typing/src/texttransformation.js";
 import Underline from "@ckeditor/ckeditor5-basic-styles/src/underline.js";
 import WordCount from "@ckeditor/ckeditor5-word-count/src/wordcount.js";
+import ImageRemoveEventCallbackPlugin from "ckeditor5-image-remove-event-callback-plugin";
 
 class Editor extends ClassicEditor {}
 
@@ -78,10 +79,8 @@ Editor.builtinPlugins = [
   Autoformat,
   AutoImage,
   AutoLink,
-  Base64UploadAdapter,
   BlockQuote,
   Bold,
-  CloudServices,
   Code,
   CodeBlock,
   DataFilter,
@@ -101,6 +100,7 @@ Editor.builtinPlugins = [
   Image,
   ImageCaption,
   ImageInsert,
+  ImageRemoveEventCallbackPlugin,
   ImageResize,
   ImageStyle,
   ImageToolbar,
@@ -111,14 +111,16 @@ Editor.builtinPlugins = [
   Link,
   LinkImage,
   List,
-  ListStyle,
+  ListProperties,
   Markdown,
   MediaEmbed,
   MediaEmbedToolbar,
   Mention,
+  PageBreak,
   Paragraph,
   PasteFromOffice,
   RemoveFormat,
+  SimpleUploadAdapter,
   SourceEditing,
   SpecialCharacters,
   SpecialCharactersArrows,
@@ -166,10 +168,12 @@ Editor.defaultConfig = {
       "underline",
       "|",
       "horizontalLine",
+      "pageBreak",
       "alignment",
-      "outdent",
       "indent",
+      "outdent",
       "|",
+      // "imageUpload",
       "imageInsert",
       "blockQuote",
       "insertTable",

@@ -1,22 +1,34 @@
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 // types
 import { UserProfile } from "../../interfaces/profile";
+// icons
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserEdit } from "@fortawesome/free-solid-svg-icons";
 // components
 import Seo from "../../components/general/seo";
 import Card from "../../components/bids/card";
+import ImageInput from "../../components/editPosts/imgInput";
+import ImgCropModal from "../../components/editPosts/imgCropModal";
+import { showToast } from "../../components/general/toast";
 // styles
 import styles from "../../styles/Profile.module.css";
-import { showToast } from "../../components/general/toast";
+import EditProfileModal from "../../components/profile/editProfileModal";
+import SignOut from "../../components/profile/signOut";
+import {
+  WalletAuthContext,
+  WalletAuthContextType,
+} from "../../contexts/walletAuthWrapper";
 
 const Profile: NextPage = () => {
   // dummy data
-  const userData: UserProfile = {
-    name: "Kiatanan Iamchan",
-    profile_name: "@kiatanan",
+  const dummyUserData: UserProfile = {
+    full_name: "Kiatanan Iamchan",
+    user_name: "kiatanan",
     profile_id: "#00833",
+    email: "kiatanan@gmail.com",
     img_url: "/profile/dummyprofile.png",
     wallet_key: "0x3a2CcFb2c2Aeb093Bb508AB5F6412e714C352e68",
     following: 71,
@@ -26,34 +38,75 @@ const Profile: NextPage = () => {
     and capitalism, Create character from mind and Convey in a
     personalized way. Art collected by Khoyai Art Museum, Bank of
     Thailand.`,
-    social_media: {
-      instagram: {
-        id: "@linecensor",
-        link: "https://www.instagram.com/linecensor",
-      },
-      twitter: {
-        id: "@linecensor",
-        link: "https://twitter.com/linecensor",
-      },
-      facebook: {
-        id: "@linecensor",
-        link: "https://www.facebook.com/linecensor",
-      },
+    instagram: {
+      id: "@linecensor",
+      link: "https://www.instagram.com/linecensor",
+      verified: false,
     },
+    twitter: {
+      id: "@linecensor",
+      link: "https://twitter.com/linecensor",
+      verified: true,
+    },
+    facebook: {
+      id: "@linecensor",
+      link: "https://www.facebook.com/linecensor",
+      verified: false,
+    },
+
     joined_on: "April 2021",
   };
 
-  // states
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
-  const [tabs, setTabs] = useState<Array<string>>(["Created", "Collected"]);
   const BiddingTabs = ["Ongoing", "Completed"];
+
+  // contexts
+  const { user } = useContext(WalletAuthContext) as WalletAuthContextType;
+
+  // states
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [userData, setUserData] = useState<UserProfile>(dummyUserData);
+  const [tabs, setTabs] = useState<Array<string>>(["Created", "Collected"]);
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [selectedBiddingTab, setSelectedBiddingTab] = useState<number>(0);
+  const [showEditModal, setShowEditModal] = useState<boolean>(false);
+
+  // states for profile image
+  const [tempImgUrl, setTempImgUrl] = useState<string>("");
+  const [croppedImgUrl, setCroppedImgUrl] = useState(userData.img_url);
+  const [showCropModal, setShowCropModal] = useState<boolean>(false);
+
+  // setting is logged in
+  useEffect(() => {
+    if (user && user === userData.wallet_key) setIsLoggedIn(true);
+    else if (isLoggedIn) setIsLoggedIn(false);
+  }, [user, userData, isLoggedIn]);
 
   // if logged in
   useEffect(() => {
     if (isLoggedIn) setTabs(["Published", "Draft", "Bidding"]);
   }, [isLoggedIn]);
+
+  // profile edit
+  const closeEditModal = (newValues: boolean) => {
+    setShowEditModal(false);
+    if (newValues) {
+      // TODO: api for fetching data again
+    }
+  };
+
+  // handling images
+  const cropImg = (img: File) => {
+    setTempImgUrl(URL.createObjectURL(img));
+    setShowCropModal(true);
+  };
+
+  const closeCropModal = (newImgUrl: string | null) => {
+    setShowCropModal(false);
+    if (newImgUrl) {
+      // TODO: api for storing image and update profile with new img url
+      setCroppedImgUrl(newImgUrl);
+    }
+  };
 
   useEffect(() => {
     // applying overlay and changing bg color of header
@@ -85,8 +138,10 @@ const Profile: NextPage = () => {
   return (
     <>
       <Seo
-        title={`${userData.name} | Cryptoliterature`}
-        description={userData.bio}
+        title={`${
+          userData.full_name ? userData.full_name : userData.user_name
+        } | Cryptoliterature`}
+        description={userData.bio ? userData.bio : ""}
         // TODO: change path
         path="/profile"
       />
@@ -94,8 +149,22 @@ const Profile: NextPage = () => {
       <div className="h-48 bg-lit-light-gray" id="profile-overlay">
         {isLoggedIn ? (
           <div className="h-full w-full relative">
+            <button
+              onClick={() => {
+                setShowEditModal(true);
+              }}
+              className="flex items-center bg-white p-3 sm:py-2 sm:px-3 rounded-full sm:rounded-lg border border-lit-dark border-opacity-50 hover:border-opacity-100 fixed sm:absolute bottom-20 sm:bottom-3 right-5 sm:right-56 md:right-[17rem] lg:right-[21.5rem]"
+            >
+              <span className="h-5 flex items-center">
+                <FontAwesomeIcon icon={faUserEdit} />
+              </span>
+              <span className="font-Poppins text-lg font-medium hidden sm:inline">
+                &nbsp;&nbsp;Edit profile
+              </span>
+            </button>
+
             <Link href="/new">
-              <a className="flex items-center p-3 sm:py-2 sm:px-3 rounded-full sm:rounded-lg bg-lit-light-gray border border-lit-dark border-opacity-50 hover:border-opacity-100 fixed sm:absolute bottom-5 sm:bottom-3 right-5 md:right-16 lg:right-32">
+              <a className="flex items-center bg-white p-3 sm:py-2 sm:px-3 rounded-full sm:rounded-lg border border-lit-dark border-opacity-50 hover:border-opacity-100 fixed sm:absolute bottom-5 sm:bottom-3 right-5 md:right-16 lg:right-32">
                 <Image
                   src="/vectors/edit.svg"
                   alt="Edit"
@@ -112,16 +181,33 @@ const Profile: NextPage = () => {
       </div>
 
       <main className="main-div" style={{ paddingTop: 0 }}>
-        <div className="flex flex-col items-center sm:items-start sm:flex-row gap-x-10">
+        <div className="flex flex-col items-center sm:items-start sm:flex-row gap-x-8">
           {/* left bio section */}
           <section className={`flex-1 mb-20 ${styles.bio}`}>
             <div className="flex mb-5">
               <div className="flex-3 relative">
+                {isLoggedIn ? (
+                  <div
+                    title="Change profile pic"
+                    className="absolute right-3 bottom-3"
+                  >
+                    <ImageInput
+                      cropImg={cropImg}
+                      aspect={1}
+                      id="profile-upload"
+                      iconOnly
+                    />
+                  </div>
+                ) : null}
                 <div className="absolute -top-full rounded-3xl border-7 border-white bg-white overflow-hidden">
                   <Image
                     id="profile-pic"
-                    src={userData.img_url}
-                    alt={userData.name}
+                    src={croppedImgUrl}
+                    alt={
+                      userData.full_name
+                        ? userData.full_name
+                        : userData.user_name
+                    }
                     height="725"
                     width="725"
                     className="rounded-3xl"
@@ -135,10 +221,10 @@ const Profile: NextPage = () => {
             {/* user details */}
             <div className="mr-0 sm:mr-10">
               <h2 className="font-Merriweather font-bold text-2xl">
-                {userData.name}
+                {userData.full_name}
               </h2>
               <h2 className="font-OpenSans font-semibold text-2xl text-lit-gold">
-                {userData.profile_name}
+                @{userData.user_name}
               </h2>
 
               <div className="flex flex-col items-center sm:block">
@@ -220,17 +306,50 @@ const Profile: NextPage = () => {
               </div>
 
               {/* user bio */}
-              <div className="mt-8 font-OpenSans font-bold border-b border-lit-dark border-opacity-10">
-                Bio
-              </div>
-              <div className="mt-5 font-OpenSans text-sm">{userData.bio}</div>
+              {userData.bio || isLoggedIn ? (
+                <>
+                  <div className="mt-8 font-OpenSans font-bold border-b border-lit-dark border-opacity-10">
+                    Bio
+                  </div>
+                  {userData.bio ? (
+                    <div className="mt-5 font-OpenSans text-sm">
+                      {userData.bio}
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setShowEditModal(true);
+                      }}
+                      className="mt-5 font-OpenSans text-sm text-lit-gray"
+                    >
+                      Add your bio...
+                    </button>
+                  )}
+                </>
+              ) : null}
 
               {/* social media */}
               <div className={`mt-8 font-OpenSans ${styles.socialMedia}`}>
-                {userData.social_media.instagram ? (
+                {userData.email ? (
                   <a
                     className="mt-5 flex items-center"
-                    href={userData.social_media.instagram.link}
+                    href={`mailto:${userData.email}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Image
+                      src="/vectors/email.svg"
+                      alt="Instagram"
+                      height={22}
+                      width={22}
+                    />
+                    &nbsp; <span>{userData.email}</span>
+                  </a>
+                ) : null}
+                {userData.instagram ? (
+                  <a
+                    className="mt-5 flex items-center"
+                    href={userData.instagram.link}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -240,20 +359,21 @@ const Profile: NextPage = () => {
                       height={22}
                       width={22}
                     />
-                    &nbsp; <span>{userData.social_media.instagram.id}</span>{" "}
-                    &nbsp;
-                    <Image
-                      src="/vectors/check.svg"
-                      alt="verified"
-                      height={16}
-                      width={16}
-                    />
+                    &nbsp; <span>{userData.instagram.id}</span> &nbsp;
+                    {userData.instagram.verified ? (
+                      <Image
+                        src="/vectors/check.svg"
+                        alt="verified"
+                        height={16}
+                        width={16}
+                      />
+                    ) : null}
                   </a>
                 ) : null}
-                {userData.social_media.twitter ? (
+                {userData.twitter ? (
                   <a
                     className="mt-5 flex items-center"
-                    href={userData.social_media.twitter.link}
+                    href={userData.twitter.link}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -263,20 +383,21 @@ const Profile: NextPage = () => {
                       height={22}
                       width={22}
                     />
-                    &nbsp; <span>{userData.social_media.twitter.id}</span>{" "}
-                    &nbsp;
-                    <Image
-                      src="/vectors/check.svg"
-                      alt="verified"
-                      height={16}
-                      width={16}
-                    />
+                    &nbsp; <span>{userData.twitter.id}</span> &nbsp;
+                    {userData.twitter.verified ? (
+                      <Image
+                        src="/vectors/check.svg"
+                        alt="verified"
+                        height={16}
+                        width={16}
+                      />
+                    ) : null}
                   </a>
                 ) : null}
-                {userData.social_media.facebook ? (
+                {userData.facebook ? (
                   <a
                     className="mt-5 flex items-center"
-                    href={userData.social_media.facebook.link}
+                    href={userData.facebook.link}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -286,14 +407,15 @@ const Profile: NextPage = () => {
                       height={22}
                       width={22}
                     />
-                    &nbsp; <span>{userData.social_media.facebook.id}</span>{" "}
-                    &nbsp;
-                    <Image
-                      src="/vectors/check.svg"
-                      alt="verified"
-                      height={16}
-                      width={16}
-                    />
+                    &nbsp; <span>{userData.facebook.id}</span> &nbsp;
+                    {userData.facebook.verified ? (
+                      <Image
+                        src="/vectors/check.svg"
+                        alt="verified"
+                        height={16}
+                        width={16}
+                      />
+                    ) : null}
                   </a>
                 ) : null}
               </div>
@@ -304,19 +426,8 @@ const Profile: NextPage = () => {
                   <div>Joined</div>
                   <div>{userData.joined_on}</div>
                 </div>
-                <div className="mt-12 px-2">
-                  <svg
-                    width="30"
-                    height="6"
-                    viewBox="0 0 30 6"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle cx="3" cy="3" r="3" fill="#0B1D25" />
-                    <circle cx="15" cy="3" r="3" fill="#0B1D25" />
-                    <circle cx="27" cy="3" r="3" fill="#0B1D25" />
-                  </svg>
-                </div>
+
+                {isLoggedIn ? <SignOut /> : null}
               </div>
             </div>
           </section>
@@ -388,6 +499,20 @@ const Profile: NextPage = () => {
             ))}
           </section>
         </div>
+
+        {/* img crop modal */}
+        {showCropModal ? (
+          <ImgCropModal
+            aspect={1}
+            imgUrl={tempImgUrl}
+            closeModal={closeCropModal}
+          />
+        ) : null}
+
+        {/* profile edit modal */}
+        {showEditModal ? (
+          <EditProfileModal userData={userData} close={closeEditModal} />
+        ) : null}
       </main>
     </>
   );
