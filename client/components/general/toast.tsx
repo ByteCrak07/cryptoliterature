@@ -30,6 +30,7 @@ const Toast: FC = () => {
         {`
           .toast {
             animation: openToast 3s linear;
+            box-shadow: 0px 2px 6px 0px #ffffff40;
           }
 
           @keyframes openToast {

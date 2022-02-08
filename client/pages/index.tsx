@@ -1,12 +1,16 @@
 import type { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { FC, useEffect, useState, MouseEvent } from "react";
+import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import SwiperCore, { Autoplay } from "swiper";
+import { throttle } from "lodash";
 // icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 // components
 import Card from "../components/bids/card";
 import LatestBlogCard from "../components/blogs/latest-blog-card";
@@ -22,196 +26,378 @@ const Home: NextPage = () => {
 
   const filters = ["All", "Short Story", "Poem", "Quote"];
 
+  useEffect(() => {
+    var countDownDate = new Date("Feb 14, 2022 20:00:00 UTC+5:30").getTime();
+
+    var timer = setInterval(function () {
+      // Current date and time
+      var now = new Date().getTime();
+
+      // Difference between now and the count down date
+      var diff = countDownDate - now;
+
+      var days, hours, minutes, seconds;
+
+      if (diff < 0) {
+        days = hours = minutes = seconds = 0;
+      } else {
+        days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      }
+
+      // Display the values
+      (document.getElementById("time-days") as Element).innerHTML = `${days}`;
+      (document.getElementById("time-hours") as Element).innerHTML = `${hours}`;
+      (
+        document.getElementById("time-mins") as Element
+      ).innerHTML = `${minutes}`;
+      (
+        document.getElementById("time-secs") as Element
+      ).innerHTML = `${seconds}`;
+
+      // If the count down is finished stop
+      if (diff < 0) {
+        clearInterval(timer);
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+
+  // switching dark mode
+  useEffect(() => {
+    const isInViewport = () => {
+      const learnMore = document.getElementById("switch-darkmode");
+
+      if (learnMore) {
+        const rect = learnMore.getBoundingClientRect();
+
+        return (
+          rect.top >= 0 &&
+          rect.left >= 0 &&
+          rect.bottom <=
+            (window.innerHeight || document.documentElement.clientHeight) &&
+          rect.right <=
+            (window.innerWidth || document.documentElement.clientWidth)
+        );
+      } else return false;
+    };
+
+    const applyDarkMode = throttle(() => {
+      if (isInViewport()) document.documentElement.classList.add("dark");
+      else document.documentElement.classList.remove("dark");
+    }, 100);
+
+    applyDarkMode();
+
+    window.addEventListener("scroll", applyDarkMode);
+
+    return () => {
+      document.documentElement.classList.remove("dark");
+      window.removeEventListener("scroll", applyDarkMode);
+    };
+  }, []);
+
+  // handling drag to learn more
+  const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+
+    handleMouseMove(e);
+    document.onmousemove = handleMouseMove;
+    document.onmouseup = handleMouseUp;
+  };
+
+  const handleMouseUp = () => {
+    document.onmousemove = null;
+    document.onmouseup = null;
+  };
+
+  const handleMouseMove = (
+    e: globalThis.MouseEvent | MouseEvent<HTMLDivElement>
+  ) => {
+    e.preventDefault();
+    const landingSection = document.getElementById("landing-section");
+    const slidesSection = document.getElementById("slides-section");
+
+    // -24 for adjusting window to the learn more text
+    if (landingSection && slidesSection) {
+      document.documentElement.scrollTop = window.innerHeight - e.clientY - 24;
+
+      if (window.scrollY > landingSection.clientHeight / 3) {
+        handleMouseUp();
+        // -96 for offsetting from header 6rem (96px)
+        window.scrollTo({
+          top: slidesSection.offsetTop - 96,
+          behavior: "smooth",
+        });
+      }
+    }
+  };
+
   return (
-    <main className="main-div">
+    <main>
       <Seo
         title="Cryptoliterature"
         description="Sell your Literature works as NFTs - Cryptoliterature an epiphany to the literary world"
         path="/"
       />
 
-      <ComingSoon />
-
-      {/* <section>
-        <Swiper
-          slidesPerView={1}
-          spaceBetween={20}
-          speed={2000}
-          loop={true}
-          autoplay={{
-            delay: 10000,
-          }}
-          grabCursor={true}
-          longSwipesRatio={0.25}
+      <div className="main-div bg-lit-dark transition-colors">
+        <section
+          id="landing-section"
+          className="text-white flex items-center pb-24 relative"
+          style={{ height: `calc(100vh - 6rem)` }}
         >
-          <SwiperSlide>
-            <div className="flex items-center flex-col-reverse md:flex-row">
-              <div className="flex-1 flex justify-evenly align-items flex-col md:mr-5">
-                <h1 className="mt-5 font-Merriweather text-4xl md:text-5xl leading-snug md:leading-snug">
-                  An epiphany for the literary world!!
+          <div className="flex items-center font-OpenSans w-full">
+            <div className="flex-3 flex justify-evenly align-items flex-col md:mr-5">
+              <div>
+                <h2 className="text-lg md:text-xl">
+                  Cryptoliterature presents
+                </h2>
+                <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold">
+                  Mi Amor
                 </h1>
-                <div className="w-full mt-5">
-                  <button
-                    className={`${styles.bannerBtn} bg-lit-dark text-white font-semibold rounded-md px-5 py-3`}
+              </div>
+
+              <div className="flex flex-wrap sm:flex-nowrap gap-y-2 gap-x-2 sm:gap-x-4 mt-10">
+                <div className="bg-[#1F3139] shadow-2xl shadow-black p-2 sm:p-4 rounded-xl">
+                  <div className="text-xs sm:text-sm lg:text-base xl:text-xl">
+                    DAYS
+                  </div>
+                  <div
+                    id="time-days"
+                    className="font-Merriweather text-4xl sm:text-5xl lg:text-7xl xl:text-9xl"
                   >
-                    Start Bidding&nbsp;&nbsp;&nbsp;&nbsp;
-                    <span className="arrow-animate">
-                      <FontAwesomeIcon
-                        className="w-2 inline opacity-50"
-                        icon={faChevronRight}
-                      />
-                      &nbsp;&nbsp;
-                      <FontAwesomeIcon
-                        className="w-2 inline opacity-0"
-                        icon={faChevronRight}
-                      />
-                    </span>
-                  </button>
+                    &nbsp;
+                  </div>
+                </div>
+                <div className="bg-[#1F3139] shadow-2xl shadow-black p-2 sm:p-4 rounded-xl">
+                  <div className="text-xs sm:text-sm lg:text-base xl:text-xl">
+                    HOURS
+                  </div>
+                  <div
+                    id="time-hours"
+                    className="font-Merriweather text-4xl sm:text-5xl lg:text-7xl xl:text-9xl"
+                  >
+                    &nbsp;
+                  </div>
+                </div>
+                <div className="bg-[#1F3139] shadow-2xl shadow-black p-2 sm:p-4 rounded-xl">
+                  <div className="text-xs sm:text-sm lg:text-base xl:text-xl">
+                    MINUTES
+                  </div>
+                  <div
+                    id="time-mins"
+                    className="font-Merriweather text-4xl sm:text-5xl lg:text-7xl xl:text-9xl"
+                  >
+                    &nbsp;
+                  </div>
+                </div>
+                <div className="bg-[#1F3139] shadow-2xl shadow-black p-2 sm:p-4 rounded-xl">
+                  <div className="text-xs sm:text-sm lg:text-base xl:text-xl">
+                    SECONDS
+                  </div>
+                  <div
+                    id="time-secs"
+                    className="font-Merriweather text-4xl sm:text-5xl lg:text-7xl xl:text-9xl"
+                  >
+                    &nbsp;
+                  </div>
                 </div>
               </div>
-              <div className="flex-1 flex justify-around max-w-xs md:max-w-none">
-                <Image
-                  src="/banner/Marcus_Aurelius.png"
-                  alt="Marcus Aurelius"
-                  height="550px"
-                  width="450px"
-                />
+
+              <div id="intro-section" className="mt-14 ml-5">
+                <Link href="/mi-amor">
+                  <a className="hover:underline font-Poppins text-xl">
+                    Register now
+                  </a>
+                </Link>
               </div>
             </div>
-          </SwiperSlide>
-        </Swiper>
-      </section>
 
-      <section className="my-20">
-        <div className="flex pl-4 md:justify-start my-5 justify-center">
-          {filters.map((filter, i) => (
-            <button
-              key={`filter-${i}`}
-              onClick={() => {
-                setSelected(i);
-              }}
-              className={`mx-2 px-4 p-1 rounded-full transition ease-linear ${
-                selected == i ? "bg-lit-dark text-white" : ""
-              }`}
+            <div className="flex-2 hidden md:flex justify-around max-w-xs md:max-w-none">
+              <Image
+                src="/banner/Lucius_Verus.png"
+                alt="Lucius Verus"
+                height="577px"
+                width="428px"
+                loading="eager"
+              />
+            </div>
+          </div>
+
+          <div id="switch-darkmode" className="absolute bottom-24 w-full"></div>
+
+          <div className="absolute -bottom-3 w-full">
+            <div className="relative flex justify-center">
+              <div className="hover:cursor-grab" onMouseDown={handleMouseDown}>
+                <Image
+                  src="/vectors/union.png"
+                  alt=""
+                  draggable={false}
+                  aria-hidden
+                  height={100}
+                  width={280}
+                />
+              </div>
+              <div className="pointer-events-none absolute inset-0 -bottom-2 left-1 flex items-center justify-center text-lit-dark font-OpenSans font-semibold">
+                Drag to Learn More
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div className="main-div pb-24">
+        <section id="slides-section" style={{ height: `calc(100vh - 6rem)` }}>
+          <div className="flex items-center font-OpenSans w-full">
+            <div className="flex-3 mt-10 md:mt-0 w-40 lg:w-96 xl:w-[30rem]">
+              <Swiper
+                slidesPerView={1}
+                spaceBetween={20}
+                speed={1000}
+                autoplay={{
+                  delay: 10000,
+                }}
+                loop
+                grabCursor
+                longSwipesRatio={0.25}
+              >
+                {/* slide 1 */}
+                <SwiperSlide>
+                  <div className="px-1">
+                    <h2 className="text-5xl sm:text-6xl font-bold">
+                      What is this about?
+                    </h2>
+                    <h3 className="mt-10 font-Roboto text-xl">
+                      Mi Amour is an exclusive event conducted by
+                      Cryptoliterature for the <b>writers inside you</b>. This
+                      is your chance to write and publish your favorite piece of
+                      work, be it an article, poem, story or anything that you
+                      are passionate about.
+                    </h3>
+                  </div>
+
+                  <div className="flex mt-14 sm:mt-20">
+                    <div className="font-Merriweather text-4xl flex tracking-tighter">
+                      01/<div className="text-xl ml-1">03</div>
+                    </div>
+
+                    <div className="ml-16 flex items-center gap-x-2">
+                      <SlidePrevButton disabled />
+                      <SlideNextButton />
+                    </div>
+                  </div>
+                </SwiperSlide>
+
+                {/* slide 2 */}
+                <SwiperSlide>
+                  <div className="px-1">
+                    <h2 className="text-5xl sm:text-6xl font-bold">
+                      What&apos;s the catch?
+                    </h2>
+                    <h3 className="mt-10 font-Roboto text-xl">
+                      Well well well, we definitely have something exciting for
+                      you! The winners will be awarded with one of the hottest
+                      currencies in the world, <b>Bitcoin</b>.
+                      <br />
+                      Yes you read that right. This is your chance to write and
+                      win big
+                    </h3>
+                  </div>
+
+                  <div className="flex mt-14 sm:mt-20">
+                    <div className="font-Merriweather text-4xl flex tracking-tighter">
+                      02/<div className="text-xl ml-1">03</div>
+                    </div>
+
+                    <div className="ml-16 flex items-center gap-x-2">
+                      <SlidePrevButton />
+                      <SlideNextButton />
+                    </div>
+                  </div>
+                </SwiperSlide>
+
+                {/* slide 3 */}
+                <SwiperSlide>
+                  <div className="px-1">
+                    <h2 className="text-5xl sm:text-6xl font-bold">
+                      Tell me more!!
+                    </h2>
+                    <h3 className="mt-10 font-Roboto text-xl">
+                      Calm down Amigo! The event will span from February 14th
+                      till 28th and the theme for the event is{" "}
+                      <b>‘Romantic Literature’</b>. Register from the link
+                      above, put on your romantic thinking caps and voila! you
+                      are good to go. See you on the other side!
+                    </h3>
+                  </div>
+
+                  <div className="flex mt-14 sm:mt-20">
+                    <div className="font-Merriweather text-4xl flex tracking-tighter">
+                      03/<div className="text-xl ml-1">03</div>
+                    </div>
+
+                    <div className="ml-16 flex items-center gap-x-2">
+                      <SlidePrevButton />
+                      <SlideNextButton disabled />
+                    </div>
+                  </div>
+                </SwiperSlide>
+              </Swiper>
+            </div>
+
+            <div
+              className="flex-2 hidden md:flex justify-around"
+              style={{ maxHeight: `calc(100vh - 10rem)` }}
             >
-              <span className="block whitespace-nowrap">{filter}</span>
-            </button>
-          ))}
-        </div>
-        <div className="flex flex-wrap justify-center gap-x-5 gap-y-10">
-          <Card
-            selected={filters[selected]}
-            genre="Poem"
-            hash="#473658"
-            title="The best way to predict the future"
-            avatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-            name="Lara Clarke"
-            currentBid="5.00 ETH"
-            endingIn="05h 12m 45s"
-          />
-          <Card
-            selected={filters[selected]}
-            genre="Quote"
-            hash="#473658"
-            title="The best way to predict the furture"
-            avatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-            name="Lara Clarke"
-            soldFor="5.00 ETH"
-            ownedBy="James Hood"
-            ownedByAvatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-          />
-          <Card
-            selected={filters[selected]}
-            genre="Poem"
-            hash="#473658"
-            title="The best way to predict the furture"
-            avatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-            name="Lara Clarke"
-            uploadedIn="5 June 2020"
-          />
-          <Card
-            selected={filters[selected]}
-            genre="Short Story"
-            hash="#473658"
-            title="The best way to predict the future"
-            avatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-            name="Lara Clarke"
-            ownedBy="James Hood"
-            ownedByAvatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-          />
-          <Card
-            selected={filters[selected]}
-            genre="Quote"
-            hash="#473658"
-            title="The best way to predict the future"
-            avatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-            name="Lara Clarke"
-            reservePrice="5.00 ETH"
-            listedBy="James Maxwell"
-            listedByAvatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-          />
-          <Card
-            selected={filters[selected]}
-            genre="Short Story"
-            hash="#473658"
-            title="The best way to predict the future"
-            avatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-            name="Lara Clarke"
-            soldFor="5.00 ETH"
-            ownedBy="James Hood"
-            ownedByAvatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-          />
-          <Card
-            selected={filters[selected]}
-            genre="Short Story"
-            hash="#473658"
-            title="The best way to predict the future"
-            avatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-            name="Lara Clarke"
-            uploadedIn="5 June 2020"
-          />
-          <Card
-            selected={filters[selected]}
-            genre="Poem"
-            hash="#473658"
-            title="The best way to predict the future"
-            avatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-            name="Lara Clarke"
-            currentBid="5.00 ETH"
-            endingIn="05h 12m 45s"
-          />
-        </div>
-      </section>
-
-      <section>
-        <div className="flex items-baseline">
-          <h1 className="font-Poppins font-semibold text-2xl">Latest Blogs</h1>
-          <Link href="/blogs">
-            <a className="ml-3 block font-semibold">
-              View more <span style={{ letterSpacing: "-4px" }}>&gt;&gt;</span>
-            </a>
-          </Link>
-        </div>
-
-        <LatestBlogCard
-          image={{
-            src: "/blogs/dummy1.png",
-            alt: "dummy1",
-            width: "591",
-            height: "311",
-          }}
-          title="Addressing the Dark Side of the Crypto World"
-          description="The same reason crypto-assets—or what some people call crypto-currencies—are so appealing is also what makes them dangerous. These digital offerings are typically built in a decentralized way and without the typically built in a decentralized way and without thetypically built in a decentralized way."
-          link="/blogs"
-          author={{
-            imgSrc:
-              "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg",
-            name: "John Doe",
-          }}
-          time={new Date().getTime()}
-        />
-      </section> */}
+              <Image
+                src="/banner/Thinker.png"
+                alt="Thinker"
+                height="642px"
+                width="415px"
+              />
+            </div>
+          </div>
+        </section>
+      </div>
     </main>
+  );
+};
+
+const SlidePrevButton: FC<{ disabled?: boolean }> = ({ disabled }) => {
+  const swiper = useSwiper();
+
+  return (
+    <button
+      className="p-3 bg-lit-dark disabled:bg-opacity-70 rounded-full text-white"
+      disabled={disabled}
+      onClick={() => swiper.slidePrev()}
+    >
+      <div className="w-4 h-4 flex items-center justify-center">
+        <FontAwesomeIcon icon={faChevronLeft} />
+      </div>
+    </button>
+  );
+};
+
+const SlideNextButton: FC<{ disabled?: boolean }> = ({ disabled }) => {
+  const swiper = useSwiper();
+
+  return (
+    <button
+      className="p-3 bg-lit-dark disabled:bg-opacity-70 rounded-full text-white"
+      disabled={disabled}
+      onClick={() => swiper.slideNext()}
+    >
+      <div className="w-4 h-4 flex items-center justify-center">
+        <FontAwesomeIcon icon={faChevronRight} />
+      </div>
+    </button>
   );
 };
 

@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -49,7 +49,7 @@ const Header: FC = () => {
       setTimeout(() => {
         document.body.removeAttribute("style");
         if (menuBtn.current) menuBtn.current.removeAttribute("style");
-      }, 500);
+      }, 200);
     }
   }, [isSidebarOpen]);
 
@@ -58,24 +58,12 @@ const Header: FC = () => {
       ele.addEventListener("click", closeSideBar);
     });
 
-    window.addEventListener(
-      "scroll",
-      throttle(() => {
-        if (window.scrollY > 0) {
-          document
-            .querySelector("#nav-header")
-            ?.classList.add("border-b", "border-lit-dark", "border-opacity-10");
-        } else {
-          document
-            .querySelector("#nav-header")
-            ?.classList.remove(
-              "border-b",
-              "border-lit-dark",
-              "border-opacity-10"
-            );
-        }
-      }, 200)
-    );
+    // for smooth transition of header after dom loads
+    window.onload = () => {
+      document
+        .getElementById("nav-header")
+        ?.classList.add("transition-colors", "duration-500");
+    };
 
     setActiveLink();
 
@@ -85,19 +73,61 @@ const Header: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    const addBorder = throttle(() => {
+      if (window.scrollY > 0) {
+        document
+          .querySelector("#nav-header")
+          ?.classList.add("border-b", "border-lit-dark", "border-opacity-10");
+      } else {
+        document
+          .querySelector("#nav-header")
+          ?.classList.remove(
+            "border-b",
+            "border-lit-dark",
+            "border-opacity-10"
+          );
+      }
+    }, 200);
+
+    if (window.location.pathname !== "/")
+      window.addEventListener("scroll", addBorder);
+
+    return () => {
+      window.removeEventListener("scroll", addBorder);
+    };
+  }, [router]);
+
   return (
     <header
       id="nav-header"
-      className="fixed bg-white top-0 left-0 right-0 z-50 py-5 md:py-7 px-7 md:px-10 lg:px-20 flex justify-between"
+      className="fixed bg-white dark:bg-lit-dark top-0 left-0 right-0 z-50 py-5 md:py-7 px-7 md:px-10 lg:px-20 flex justify-between"
     >
       <Link href="/">
         <a>
-          <Image src="/logo/logo.svg" alt="logo" height="37" width="237" />
+          <span className="dark:hidden">
+            <Image
+              src="/logo/logo.svg"
+              alt="logo"
+              height="37"
+              width="237"
+              loading="eager"
+            />
+          </span>
+          <span className="hidden dark:inline">
+            <Image
+              src="/logo/logo-white.svg"
+              alt="logo"
+              height="37"
+              width="237"
+              loading="eager"
+            />
+          </span>
         </a>
       </Link>
 
       {/* horizontal navbar */}
-      <nav className="hidden lg:flex items-center text-lit-dark">
+      <nav className="hidden lg:flex items-center text-lit-dark dark:text-white">
         <ul className="flex items-center font-Poppins font-medium">
           <li className="mx-4">
             <Link href="/bids">
@@ -115,7 +145,7 @@ const Header: FC = () => {
             </Link>
           </li>
           <li
-            className="border-l-2 mx-4 border-lit-dark border-opacity-30 h-6"
+            className="border-l-2 mx-4 border-lit-dark dark:border-white border-opacity-30 h-6"
             aria-hidden="true"
           ></li>
           <li className="mx-4">

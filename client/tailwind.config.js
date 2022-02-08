@@ -5,6 +5,7 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: "class",
   theme: {
     screens: {
       xs: "475px",
@@ -31,6 +32,7 @@ module.exports = {
         Merriweather: ["Merriweather", "serif"],
         Poppins: ["Poppins", "sans-serif"],
         OpenSans: ["Open Sans", "sans-serif"],
+        Roboto: ["Roboto", "sans-serif"],
       },
       flex: {
         2: "2 2 0%",

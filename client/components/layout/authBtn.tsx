@@ -88,16 +88,16 @@ const AuthBtn: FC<AuthBtnProps> = ({ style, openModal, skipAutoLogin }) => {
           </button>
         ) : (
           <button
-            className="flex items-center font-medium px-5 py-2 rounded-full bg-white"
-            style={{ boxShadow: "2px 2px 6px 0px #00000040" }}
+            className="flex items-center font-medium px-5 py-2 rounded-full bg-white dark:bg-lit-dark"
+            style={{ boxShadow: "2px 2px 6px 0px #ffffff1c" }}
             onClick={openModal}
           >{`${user.substring(0, 4)}.....${user.substring(38, 42)}`}</button>
         )
       ) : (
         <button
-          className="flex items-center font-medium px-10 py-2 rounded-full bg-white"
+          className="flex items-center font-medium px-10 py-2 rounded-full bg-white dark:bg-lit-dark"
           disabled={true}
-          style={{ boxShadow: "2px 2px 6px 0px #00000040" }}
+          style={{ boxShadow: "2px 2px 6px 0px #ffffff1c" }}
         >
           <RingSpinner width={25} />
         </button>
