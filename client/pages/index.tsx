@@ -212,7 +212,7 @@ const Home: NextPage = () => {
 
               <div id="intro-section" className="mt-14 ml-5">
                 <Link href="/mi-amor">
-                  <a className="hover:underline font-Poppins text-xl">
+                  <a className="py-2 px-5 bg-white text-lit-dark rounded-full font-Poppins font-medium text-xl sm:bg-opacity-80 hover:bg-opacity-100">
                     Register now
                   </a>
                 </Link>
@@ -230,7 +230,10 @@ const Home: NextPage = () => {
             </div>
           </div>
 
-          <div id="switch-darkmode" className="absolute bottom-24 w-full"></div>
+          <div
+            id="switch-darkmode"
+            className="absolute bottom-52 sm:bottom-24 w-full"
+          ></div>
 
           <div className="absolute -bottom-3 w-full">
             <div className="relative flex justify-center">

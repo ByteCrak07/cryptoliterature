@@ -11,8 +11,8 @@ const MiAmor: NextPage = () => {
         path="/mi-amor"
       />
 
-      <section className="flex w-100 justify-center pt-10 pb-32">
-        <div className="rounded-3xl overflow-hidden">
+      <section className="flex w-100 justify-center pt-10 pb-24">
+        <div className="rounded-3xl overflow-hidden w-80 xs:w-full">
           <iframe
             src="https://docs.google.com/forms/d/e/1FAIpQLSeU4B6HHLzWo4hLyrCf_TBbiUYWB6XBysXhkQaEFAwKG0tYLA/viewform?embedded=true"
             width="640"
@@ -20,8 +20,7 @@ const MiAmor: NextPage = () => {
             frameBorder="0"
             marginHeight={0}
             marginWidth={0}
-            className=""
-            style={{ height: "920px" }}
+            className="w-full h-[1100px] xs:h-[920px]"
           >
             Loading…
           </iframe>
