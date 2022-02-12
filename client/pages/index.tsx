@@ -230,10 +230,7 @@ const Home: NextPage = () => {
             </div>
           </div>
 
-          <div
-            id="switch-darkmode"
-            className="absolute bottom-52 sm:bottom-24 w-full"
-          ></div>
+          <div id="switch-darkmode" className="absolute bottom-48 w-full"></div>
 
           <div className="absolute -bottom-3 w-full">
             <div className="relative flex justify-center">
@@ -256,7 +253,11 @@ const Home: NextPage = () => {
       </div>
 
       <div className="main-div pb-24">
-        <section id="slides-section" style={{ height: `calc(100vh - 6rem)` }}>
+        <section
+          id="slides-section"
+          className="flex items-center"
+          style={{ height: `calc(100vh - 6rem)` }}
+        >
           <div className="flex items-center font-OpenSans w-full">
             <div className="flex-3 mt-10 md:mt-0 w-40 lg:w-96 xl:w-[30rem]">
               <Swiper
