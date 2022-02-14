@@ -34,6 +34,11 @@ export default async function getCroppedImg(
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
 
+  if (ctx) {
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
   if (!ctx) {
     return null;
   }
@@ -50,6 +55,11 @@ export default async function getCroppedImg(
   // set canvas size to match the bounding box
   canvas.width = bBoxWidth;
   canvas.height = bBoxHeight;
+
+  if (ctx) {
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
 
   // translate canvas context to a central location to allow rotating and flipping around the center
   ctx.translate(bBoxWidth / 2, bBoxHeight / 2);
@@ -77,12 +87,12 @@ export default async function getCroppedImg(
   ctx.putImageData(data, 0, 0);
 
   // As Base64 string
-  // return canvas.toDataURL('image/jpeg');
+  return canvas.toDataURL("image/jpeg");
 
   // As a blob
-  return new Promise<string>((resolve, reject) => {
-    canvas.toBlob((file) => {
-      if (file) resolve(URL.createObjectURL(file));
-    }, "image/jpeg");
-  });
+  // return new Promise<string>((resolve, reject) => {
+  //   canvas.toBlob((file) => {
+  //     if (file) resolve(URL.createObjectURL(file));
+  //   }, "image/jpeg");
+  // });
 }

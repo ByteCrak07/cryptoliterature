@@ -3,6 +3,8 @@ import { UserProfile } from "../../interfaces/profile";
 import { showToast } from "../general/toast";
 import RingSpinner from "../spinners/ringSpinner";
 import ProfileInput from "./profileInput";
+import { updateUser } from "../../lib/users/patch";
+import { useRouter } from "next/router";
 
 interface EditProfileModalProps {
   userData: UserProfile;
@@ -11,34 +13,67 @@ interface EditProfileModalProps {
 
 const EditProfileModal: FC<EditProfileModalProps> = ({ userData, close }) => {
   // input states
-  const [userName, setUserName] = useState(userData.user_name);
+  const [userName, setUserName] = useState(userData.username);
   const [fullName, setFullName] = useState(
-    userData.full_name ? userData.full_name : ""
+    userData.fullName ? userData.fullName : ""
   );
   const [email, setEmail] = useState(userData.email ? userData.email : "");
   const [bio, setBio] = useState(userData.bio ? userData.bio : "");
   const [instagram, setInstagram] = useState(
-    userData.instagram ? userData.instagram.link : ""
+    userData.instaLink ? userData.instaLink : ""
   );
   const [twitter, setTwitter] = useState(
-    userData.twitter ? userData.twitter.link : ""
+    userData.twitterLink ? userData.twitterLink : ""
   );
   const [facebook, setFacebook] = useState(
-    userData.facebook ? userData.facebook.link : ""
+    userData.facebookLink ? userData.facebookLink : ""
   );
 
   const [isSaveDisabled, setIsSaveDisabled] = useState(false);
 
+  // router
+  const router = useRouter();
+
   // handle save
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (userName) {
       setIsSaveDisabled(true);
       // TODO: api call to update user
 
-      setTimeout(() => {
+      let data;
+      try {
+        data = await updateUser(
+          window.ethereum?.selectedAddress as string,
+          userName,
+          fullName,
+          email,
+          undefined, // donation url
+          bio,
+          instagram.split("/").at(-1),
+          instagram,
+          twitter.split("/").at(-1),
+          twitter,
+          facebook.split("/").at(-1),
+          facebook
+        );
+
         setIsSaveDisabled(false);
+        showToast("Profile updated");
+
+        if (window.location.pathname !== `/${data.username}`) {
+          await router.replace(`/${data.username}`);
+        }
+
         close(true);
-      }, 2000);
+      } catch (e) {
+        if (String(e) === "Error: username already exists")
+          showToast("This username already exists");
+
+        if (String(e) === "Error: email must be an email")
+          showToast("Provide a valid email");
+
+        setIsSaveDisabled(false);
+      }
     } else showToast("Username is required");
   };
 

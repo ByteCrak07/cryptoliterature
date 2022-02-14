@@ -10,8 +10,12 @@ import {
 // types
 import type { Maybe } from "@metamask/providers/dist/utils";
 // functions
-import { getCookie } from "../../lib/general/cookies";
+import { getCookie, setCookie } from "../../lib/general/cookies";
 import RingSpinner from "../spinners/ringSpinner";
+import { login } from "../../lib/users/post";
+import { getUser } from "../../lib/users/get";
+import Link from "next/link";
+import Image from "next/image";
 
 interface AuthBtnProps {
   style: string;
@@ -21,27 +25,47 @@ interface AuthBtnProps {
 
 const AuthBtn: FC<AuthBtnProps> = ({ style, openModal, skipAutoLogin }) => {
   // contexts
-  const { user, setUser, accounts, setAccounts } = useContext(
-    WalletAuthContext
-  ) as WalletAuthContextType;
+  const { user, setUser, userData, setUserData, accounts, setAccounts } =
+    useContext(WalletAuthContext) as WalletAuthContextType;
 
   // states
   const [isBtnLoading, setIsBtnLoading] = useState(true);
 
   useEffect(() => {
     const ethereum = window.ethereum;
-    const token = getCookie("token");
+    const token = getCookie("accessToken");
+    const signature = getCookie("signature");
 
-    function handleIncomingAccounts(
+    async function handleIncomingAccounts(
       incomingAccounts: Array<string> | Maybe<unknown> | unknown
     ) {
-      console.log("incoming");
       if (incomingAccounts && Array.isArray(incomingAccounts)) {
         setAccounts(incomingAccounts);
 
         // if previously stored user and current user is same and token exists
-        if (localStorage.getItem("user") === incomingAccounts[0] && token) {
-          setUser(incomingAccounts[0]);
+        if (localStorage.getItem("user") === incomingAccounts[0]) {
+          if (token) {
+            try {
+              const data = await getUser(incomingAccounts[0]);
+              setUserData(data);
+              if (data) setUser(incomingAccounts[0]);
+            } catch (e) {
+              setAccounts([]);
+            }
+          } else if (signature) {
+            try {
+              const data = await login(incomingAccounts[0], signature);
+              if (data) {
+                const { accessToken, ...newUserData } = data;
+
+                setUserData(newUserData);
+                setCookie("accessToken", accessToken, 1);
+                setCookie("signature", signature, 1);
+              }
+            } catch (e) {
+              setAccounts([]);
+            }
+          }
         }
       } else setAccounts([]);
     }
@@ -49,7 +73,7 @@ const AuthBtn: FC<AuthBtnProps> = ({ style, openModal, skipAutoLogin }) => {
     // skip autoconnect
     if (!skipAutoLogin) {
       // if token and metamask wallet exists and wallet not connected
-      if (token && ethereum && !accounts[0])
+      if (ethereum && !accounts[0])
         ethereum._metamask.isUnlocked().then((unlocked) => {
           // if wallet is unlocked autoconnect
           if (unlocked)
@@ -86,16 +110,36 @@ const AuthBtn: FC<AuthBtnProps> = ({ style, openModal, skipAutoLogin }) => {
             &nbsp;
             <span>Add&nbsp;wallet</span>
           </button>
+        ) : !userData ? (
+          <button className={style} onClick={openModal}>{`${user.substring(
+            0,
+            4
+          )}.....${user.substring(38, 42)}`}</button>
         ) : (
-          <button
-            className="flex items-center font-medium px-5 py-2 rounded-full bg-white dark:bg-lit-dark"
-            style={{ boxShadow: "2px 2px 6px 0px #ffffff1c" }}
-            onClick={openModal}
-          >{`${user.substring(0, 4)}.....${user.substring(38, 42)}`}</button>
+          <Link href={`/${userData.username}`}>
+            <a className={style}>
+              <span className="bg-white flex items-center justify-center rounded-full overflow-hidden p-0.5 mr-2">
+                <Image
+                  src={userData.imgUrl}
+                  alt={userData.username}
+                  height={30}
+                  width={30}
+                  className="rounded-full"
+                />
+              </span>
+              <span className="block">
+                {userData.fullName ? userData.fullName : userData.username}
+                <span className="block text-xs">{`${user.substring(
+                  0,
+                  4
+                )}.....${user.substring(38, 42)}`}</span>
+              </span>
+            </a>
+          </Link>
         )
       ) : (
         <button
-          className="flex items-center font-medium px-10 py-2 rounded-full bg-white dark:bg-lit-dark"
+          className="flex items-center font-medium px-10 py-2 rounded-full bg-white"
           disabled={true}
           style={{ boxShadow: "2px 2px 6px 0px #ffffff1c" }}
         >

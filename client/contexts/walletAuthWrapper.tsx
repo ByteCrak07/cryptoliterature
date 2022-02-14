@@ -15,6 +15,7 @@ import type { Web3Provider } from "@ethersproject/providers";
 import type { UserProfile } from "../interfaces/profile";
 // functions
 import { deleteCookie, getCookie, setCookie } from "../lib/general/cookies";
+import { login } from "../lib/users/post";
 
 interface WalletAuthContextType {
   user: string | null;
@@ -36,6 +37,11 @@ const WalletAuthWrapper: FC = ({ children }) => {
   const [accounts, setAccounts] = useState<Array<string>>([]);
   const [ethersProvider, setEthersProvider] = useState<Web3Provider>();
   const onboarding = useRef<MetaMaskOnboarding>();
+
+  // assign user when userdata is present
+  useEffect(() => {
+    if (userData) setUser(userData.walletKey);
+  }, [userData]);
 
   // initialise onboarding and ethers
   useEffect(() => {
@@ -70,17 +76,19 @@ const WalletAuthWrapper: FC = ({ children }) => {
           ethereum.selectedAddress,
         ],
       })
-      .then((val) => {
+      .then((signature) => {
         // TODO: api for getting back jwt token
         // storing val for now
-        setCookie("token", val as string, 1);
+
+        setCookie("signature", signature as string, 10);
         localStorage.setItem("user", ethereum.selectedAddress as string);
         setUser(ethereum.selectedAddress);
       });
   }
 
   function removeUserData() {
-    deleteCookie("token");
+    deleteCookie("accessToken");
+    deleteCookie("signature");
     setUser(null);
     setUserData(null);
     localStorage.removeItem("user");
@@ -92,7 +100,7 @@ const WalletAuthWrapper: FC = ({ children }) => {
     if (Array.isArray(newAccounts) && newAccounts.length > 0) {
       if (
         newAccounts[0] === localStorage.getItem("user") &&
-        getCookie("token")
+        getCookie("signature")
       ) {
         setAccounts(newAccounts);
         setUser(newAccounts[0]);

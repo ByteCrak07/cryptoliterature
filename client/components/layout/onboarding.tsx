@@ -7,6 +7,8 @@ import {
   WalletAuthContext,
   WalletAuthContextType,
 } from "../../contexts/walletAuthWrapper";
+import { createUser } from "../../lib/users/post";
+import { getCookie } from "../../lib/general/cookies";
 
 interface OnboardingProps {
   close: () => void;
@@ -18,38 +20,51 @@ const Onboarding: FC<OnboardingProps> = ({ close }) => {
   const [isCollector, setIsCollector] = useState(false);
   const [screen, setScreen] = useState<number>(0);
   const [userName, setUserName] = useState<string>("");
-  const [FullName, setFullName] = useState<string>("");
+  const [fullName, setFullName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [isFinishDisabled, setIsFinishDisabled] = useState(false);
 
   // context
-  const { setUserData } = useContext(
+  const { user, setUserData } = useContext(
     WalletAuthContext
   ) as WalletAuthContextType;
 
   // router
   const router = useRouter();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (userName) {
       setIsFinishDisabled(true);
-      // TODO: api call to create user => returns username, fullname, email, profile_id, imgurl, walletkey,following,followers,joined on
-      // storing dummy values for now
-      setUserData({
-        user_name: userName,
-        full_name: FullName,
-        email: email,
-        profile_id: "#123",
-        followers: 0,
-        following: 0,
-        img_url: "jaba",
-        joined_on: "June 2021",
-        wallet_key: window.ethereum?.selectedAddress as string,
-      });
-      setIsFinishDisabled(false);
-      router.push("/profile");
-      close();
-      console.log("save profile");
+      // api call to create user
+
+      let data;
+      try {
+        data = await createUser(
+          user as string,
+          getCookie("signature") as string,
+          userName,
+          fullName,
+          email,
+          isWriter,
+          isCollector
+        );
+      } catch (e) {
+        if (String(e) === "Error: username already exists")
+          showToast("This username already exists");
+
+        if (String(e) === "Error: email must be an email")
+          showToast("Provide a valid email");
+
+        setIsFinishDisabled(false);
+      }
+
+      if (data) {
+        const { accessToken, ...newUserData } = data;
+        setUserData(newUserData);
+        setIsFinishDisabled(false);
+        router.push(`/${userName}`);
+        close();
+      }
     } else showToast("Provide us your Username");
   };
 
@@ -145,7 +160,7 @@ const Onboarding: FC<OnboardingProps> = ({ close }) => {
           <div className="mb-2">
             <input
               type="text"
-              value={FullName}
+              value={fullName}
               onChange={(e) => {
                 setFullName(e.target.value);
               }}
@@ -173,7 +188,7 @@ const Onboarding: FC<OnboardingProps> = ({ close }) => {
               {!isFinishDisabled ? (
                 "Finish"
               ) : (
-                <RingSpinner width={10} color="white" />
+                <RingSpinner width={24} color="white" />
               )}
             </button>
           </div>

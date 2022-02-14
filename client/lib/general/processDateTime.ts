@@ -23,3 +23,10 @@ export function DDMMMYYYYTwelveHr(time: Date | number) {
     minute: "2-digit",
   })}`;
 }
+
+export function MonthYYYY(time: Date | number) {
+  if (typeof time === "number" || typeof time === "string")
+    time = new Date(time);
+
+  return `${monthsShort[time.getMonth()]} ${time.getFullYear()}`;
+}

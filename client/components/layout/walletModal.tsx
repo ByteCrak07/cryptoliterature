@@ -9,6 +9,8 @@ import { showToast } from "../general/toast";
 import { getCookie, setCookie } from "../../lib/general/cookies";
 import RingSpinner from "../spinners/ringSpinner";
 import Onboarding from "./onboarding";
+import { login } from "../../lib/users/post";
+import { getUser } from "../../lib/users/get";
 
 interface WalletModalProps {
   close: () => void;
@@ -16,8 +18,15 @@ interface WalletModalProps {
 
 const WalletModal: FC<WalletModalProps> = ({ close }) => {
   // contexts
-  const { user, setUser, userData, accounts, setAccounts, startOnboarding } =
-    useContext(WalletAuthContext) as WalletAuthContextType;
+  const {
+    user,
+    setUser,
+    userData,
+    setUserData,
+    accounts,
+    setAccounts,
+    startOnboarding,
+  } = useContext(WalletAuthContext) as WalletAuthContextType;
 
   // states
   const [metamaskBtnDisabled, setMetamaskBtnDisabled] = useState(false);
@@ -48,14 +57,28 @@ const WalletModal: FC<WalletModalProps> = ({ close }) => {
           ethereum.selectedAddress,
         ],
       })
-      .then((val) => {
-        // TODO: api for getting back jwt token
-        // storing val for now
-        setCookie("token", val as string, 1);
+      .then(async (signature) => {
+        // getting back jwt token
+        let data;
+        try {
+          data = await login(
+            ethereum.selectedAddress as string,
+            signature as string
+          );
+        } catch (e) {}
+
+        setCookie("signature", signature as string, 10);
         localStorage.setItem("user", ethereum.selectedAddress as string);
         setUser(ethereum.selectedAddress);
         setSignBtnDisabled(false);
-        close();
+
+        if (data) {
+          const { accessToken, ...newUserData } = data;
+          setUserData(newUserData);
+          setCookie("signature", signature as string, 1);
+          setCookie("accessToken", accessToken, 1);
+          close();
+        }
       })
       .catch(() => {
         setSignBtnDisabled(false);
@@ -64,21 +87,24 @@ const WalletModal: FC<WalletModalProps> = ({ close }) => {
 
   const addWalletMetaMask = () => {
     const ethereum = window.ethereum;
-    const token = getCookie("token");
+    // const signature = getCookie("signature");
+    const token = getCookie("accessToken");
 
     if (ethereum?.isMetaMask) {
       setMetamaskBtnDisabled(true);
 
       ethereum
         .request({ method: "eth_requestAccounts" })
-        .then((newAccounts) => {
+        .then(async (newAccounts) => {
           if (Array.isArray(newAccounts) && newAccounts.length > 0) {
             setAccounts(newAccounts);
             setMetamaskBtnDisabled(false);
 
             // after getting account change screen for personal sign if token doesn't exist or current user is previously signed in
             if (localStorage.getItem("user") === newAccounts[0] && token) {
+              const data = await getUser(newAccounts[0]);
               setUser(newAccounts[0]);
+              if (data) setUserData(data);
               close();
             } else setScreen(1);
           }

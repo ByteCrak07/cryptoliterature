@@ -8,6 +8,7 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       SITE_URL: string;
+      API_URL: string;
       GHOST_URL: string;
       GHOST_CONTENT_API_KEY: string;
     }

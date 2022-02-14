@@ -25,6 +25,8 @@ module.exports = {
       "static.ghost.org",
       "blog.cryptoliterature.in",
       "expertphotography.b-cdn.net",
+      "avatars.dicebear.com",
+      "cryptoliterature.s3.ap-south-1.amazonaws.com",
     ],
   },
 

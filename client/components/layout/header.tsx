@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -8,6 +8,10 @@ import styles from "../../styles/Header.module.css";
 // components
 import WalletModal from "./walletModal";
 import AuthBtn from "./authBtn";
+import {
+  WalletAuthContext,
+  WalletAuthContextType,
+} from "../../contexts/walletAuthWrapper";
 
 const Header: FC = () => {
   // states
@@ -17,6 +21,9 @@ const Header: FC = () => {
 
   // router
   const router = useRouter();
+
+  // contexts
+  const { userData } = useContext(WalletAuthContext) as WalletAuthContextType;
 
   // functions
   const closeSideBar = () => {
@@ -148,7 +155,7 @@ const Header: FC = () => {
             className="border-l-2 mx-4 border-lit-dark dark:border-white border-opacity-30 h-6"
             aria-hidden="true"
           ></li>
-          <li className="mx-4">
+          <li className={`mx-4 ${userData ? "-my-5" : ""}`}>
             <AuthBtn
               style={styles.walletBtn}
               openModal={() => {

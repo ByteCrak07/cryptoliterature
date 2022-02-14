@@ -1,70 +1,63 @@
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 // types
-import { UserProfile } from "../../interfaces/profile";
+import { UserProfile } from "../interfaces/profile";
 // icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserEdit } from "@fortawesome/free-solid-svg-icons";
 // components
-import Seo from "../../components/general/seo";
-import Card from "../../components/bids/card";
-import ImageInput from "../../components/editPosts/imgInput";
-import ImgCropModal from "../../components/editPosts/imgCropModal";
-import { showToast } from "../../components/general/toast";
+import Seo from "../components/general/seo";
+import Card from "../components/bids/card";
+import ImageInput from "../components/editPosts/imgInput";
+import ImgCropModal from "../components/editPosts/imgCropModal";
+import { showToast } from "../components/general/toast";
 // styles
-import styles from "../../styles/Profile.module.css";
-import EditProfileModal from "../../components/profile/editProfileModal";
-import SignOut from "../../components/profile/signOut";
+import styles from "../styles/Profile.module.css";
+import EditProfileModal from "../components/profile/editProfileModal";
+import SignOut from "../components/profile/signOut";
 import {
   WalletAuthContext,
   WalletAuthContextType,
-} from "../../contexts/walletAuthWrapper";
+} from "../contexts/walletAuthWrapper";
+import { MonthYYYY } from "../lib/general/processDateTime";
+import { getUserWithUsername } from "../lib/users/get";
+import { uploadProfileImg } from "../lib/users/post";
+import RingSpinner from "../components/spinners/ringSpinner";
 
-const Profile: NextPage = () => {
-  // dummy data
-  const dummyUserData: UserProfile = {
-    full_name: "Kiatanan Iamchan",
-    user_name: "kiatanan",
-    profile_id: "#00833",
-    email: "kiatanan@gmail.com",
-    img_url: "/profile/dummyprofile.png",
-    wallet_key: "0x3a2CcFb2c2Aeb093Bb508AB5F6412e714C352e68",
-    following: 71,
-    followers: 12,
-    buymeacoffee_link: "https://www.buymeacoffee.com/linecensor",
-    bio: `Born in 1982. My works reflect with a passion for cartoons, games
-    and capitalism, Create character from mind and Convey in a
-    personalized way. Art collected by Khoyai Art Museum, Bank of
-    Thailand.`,
-    instagram: {
-      id: "@linecensor",
-      link: "https://www.instagram.com/linecensor",
-      verified: false,
-    },
-    twitter: {
-      id: "@linecensor",
-      link: "https://twitter.com/linecensor",
-      verified: true,
-    },
-    facebook: {
-      id: "@linecensor",
-      link: "https://www.facebook.com/linecensor",
-      verified: false,
-    },
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  let userData;
 
-    joined_on: "April 2021",
+  if (params && params.uname)
+    userData = await getUserWithUsername(params.uname as string);
+
+  if (!userData) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: { serverUserData: userData, timestamp: new Date().toUTCString() },
   };
+};
 
+interface ProfileProps {
+  serverUserData: UserProfile;
+}
+
+const Profile: NextPage<ProfileProps> = ({ serverUserData }) => {
   const BiddingTabs = ["Ongoing", "Completed"];
 
   // contexts
-  const { user } = useContext(WalletAuthContext) as WalletAuthContextType;
+  const { user, setUserData } = useContext(
+    WalletAuthContext
+  ) as WalletAuthContextType;
 
   // states
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [userData, setUserData] = useState<UserProfile>(dummyUserData);
+  const [pageUserData, setPageUserData] = useState<UserProfile>(serverUserData);
   const [tabs, setTabs] = useState<Array<string>>(["Created", "Collected"]);
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [selectedBiddingTab, setSelectedBiddingTab] = useState<number>(0);
@@ -72,14 +65,16 @@ const Profile: NextPage = () => {
 
   // states for profile image
   const [tempImgUrl, setTempImgUrl] = useState<string>("");
-  const [croppedImgUrl, setCroppedImgUrl] = useState(userData.img_url);
+  const [croppedImgUrl, setCroppedImgUrl] = useState(pageUserData.imgUrl);
   const [showCropModal, setShowCropModal] = useState<boolean>(false);
+  const [showProfileImgSpinner, setShowProfileImgSpinner] =
+    useState<boolean>(false);
 
   // setting is logged in
   useEffect(() => {
-    if (user && user === userData.wallet_key) setIsLoggedIn(true);
+    if (user && user === pageUserData.walletKey) setIsLoggedIn(true);
     else if (isLoggedIn) setIsLoggedIn(false);
-  }, [user, userData, isLoggedIn]);
+  }, [user, pageUserData, isLoggedIn]);
 
   // if logged in
   useEffect(() => {
@@ -87,10 +82,15 @@ const Profile: NextPage = () => {
   }, [isLoggedIn]);
 
   // profile edit
-  const closeEditModal = (newValues: boolean) => {
+  const closeEditModal = async (newValues: boolean) => {
     setShowEditModal(false);
     if (newValues) {
       // TODO: api for fetching data again
+      const data = await getUserWithUsername(
+        window.location.pathname.replace("/", "")
+      );
+      setPageUserData(data);
+      setUserData(data);
     }
   };
 
@@ -100,11 +100,21 @@ const Profile: NextPage = () => {
     setShowCropModal(true);
   };
 
-  const closeCropModal = (newImgUrl: string | null) => {
+  const closeCropModal = async (newImgUrl: string | null) => {
     setShowCropModal(false);
+
     if (newImgUrl) {
-      // TODO: api for storing image and update profile with new img url
-      setCroppedImgUrl(newImgUrl);
+      setShowProfileImgSpinner(true);
+
+      // api for storing image and update profile with new img url
+      const newUrl = await uploadProfileImg(newImgUrl, pageUserData.imgUrl);
+
+      // otherwise image wouldnt be updated due to next image caching
+      if (newUrl) {
+        setCroppedImgUrl(newImgUrl);
+        setUserData({ ...pageUserData, imgUrl: newImgUrl });
+      }
+      setShowProfileImgSpinner(false);
     }
   };
 
@@ -139,9 +149,9 @@ const Profile: NextPage = () => {
     <>
       <Seo
         title={`${
-          userData.full_name ? userData.full_name : userData.user_name
+          pageUserData.fullName ? pageUserData.fullName : pageUserData.username
         } | Cryptoliterature`}
-        description={userData.bio ? userData.bio : ""}
+        description={pageUserData.bio ? pageUserData.bio : ""}
         // TODO: change path
         path="/profile"
       />
@@ -204,14 +214,19 @@ const Profile: NextPage = () => {
                     id="profile-pic"
                     src={croppedImgUrl}
                     alt={
-                      userData.full_name
-                        ? userData.full_name
-                        : userData.user_name
+                      pageUserData.fullName
+                        ? pageUserData.fullName
+                        : pageUserData.username
                     }
                     height="725"
                     width="725"
                     className="rounded-3xl"
                   />
+                  {showProfileImgSpinner ? (
+                    <div className="absolute inset-0 bg-white bg-opacity-80">
+                      <RingSpinner width={50} />
+                    </div>
+                  ) : null}
                 </div>
                 <div style={{ paddingTop: "50%" }}></div>
               </div>
@@ -221,30 +236,30 @@ const Profile: NextPage = () => {
             {/* user details */}
             <div className="mr-0 sm:mr-10">
               <h2 className="font-Merriweather font-bold text-2xl">
-                {userData.full_name}
+                {pageUserData.fullName}
               </h2>
               <h2 className="font-OpenSans font-semibold text-2xl text-lit-gold">
-                @{userData.user_name}
+                @{pageUserData.username}
               </h2>
 
               <div className="flex flex-col items-center sm:block">
                 <div className="mt-8">
                   <div className="bg-lit-light-gray rounded-3xl py-2 px-4 inline-block font-OpenSans">
                     <div className="bg-lit-dark py-2 px-4 -my-3 -mx-4 rounded-3xl inline-block text-white font-bold">
-                      {userData.profile_id}
+                      #{String(pageUserData.id).padStart(5, "0")}
                     </div>
                     <button
                       className={`ml-7 ${styles.copyBtn}`}
                       onClick={() => {
-                        navigator.clipboard.writeText(userData.wallet_key);
+                        navigator.clipboard.writeText(pageUserData.walletKey);
                         showToast("Copied to clipboard");
                       }}
                     >
                       <span id="wallet-key">
-                        {`${userData.wallet_key.substring(
+                        {`${pageUserData.walletKey.substring(
                           0,
                           4
-                        )}.......${userData.wallet_key.substring(36, 42)}`}
+                        )}.......${pageUserData.walletKey.substring(36, 42)}`}
                       </span>
                       <span className="ml-2 inline-block">
                         <svg
@@ -266,7 +281,7 @@ const Profile: NextPage = () => {
                 <div className="mt-8 flex ml-2">
                   <div>
                     <span className="font-Merriweather text-2xl font-bold">
-                      {userData.following}
+                      {pageUserData.following}
                     </span>
                     <br />
                     <div className="font-OpenSans">Following</div>
@@ -274,19 +289,26 @@ const Profile: NextPage = () => {
                   <div className="border-l mx-4 my-1 border-lit-dark border-opacity-10 h-auto"></div>
                   <div>
                     <span className="font-Merriweather text-2xl font-bold">
-                      {userData.followers}
+                      {pageUserData.followers}
                     </span>
                     <br />
                     <div className="font-OpenSans">Followers</div>
                   </div>
                 </div>
                 <div className="mt-8 font-Poppins flex flex-col text-lg w-full sm:w-auto">
-                  <button className="py-2 px-3 border border-lit-dark border-opacity-30 hover:border-opacity-100 rounded-3xl mr-0 sm:mr-6 w-full sm:w-auto">
-                    Follow
-                  </button>
-                  {userData.buymeacoffee_link ? (
+                  {!isLoggedIn ? (
+                    <button
+                      onClick={() => {
+                        showToast("This feature is coming soon");
+                      }}
+                      className="py-2 px-3 border border-lit-dark border-opacity-30 hover:border-opacity-100 rounded-3xl mr-0 sm:mr-6 w-full sm:w-auto"
+                    >
+                      Follow
+                    </button>
+                  ) : null}
+                  {pageUserData.donationUrl ? (
                     <a
-                      href={userData.buymeacoffee_link}
+                      href={pageUserData.donationUrl}
                       className="text-center py-2 px-3 border border-lit-dark border-opacity-30 hover:border-opacity-100 rounded-3xl mt-3 mr-0 sm:mr-6 w-full sm:w-auto"
                       target="_blank"
                       rel="noopener noreferrer"
@@ -306,14 +328,14 @@ const Profile: NextPage = () => {
               </div>
 
               {/* user bio */}
-              {userData.bio || isLoggedIn ? (
+              {pageUserData.bio || isLoggedIn ? (
                 <>
                   <div className="mt-8 font-OpenSans font-bold border-b border-lit-dark border-opacity-10">
                     Bio
                   </div>
-                  {userData.bio ? (
+                  {pageUserData.bio ? (
                     <div className="mt-5 font-OpenSans text-sm">
-                      {userData.bio}
+                      {pageUserData.bio}
                     </div>
                   ) : (
                     <button
@@ -330,10 +352,10 @@ const Profile: NextPage = () => {
 
               {/* social media */}
               <div className={`mt-8 font-OpenSans ${styles.socialMedia}`}>
-                {userData.email ? (
+                {pageUserData.email ? (
                   <a
                     className="mt-5 flex items-center"
-                    href={`mailto:${userData.email}`}
+                    href={`mailto:${pageUserData.email}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -343,13 +365,13 @@ const Profile: NextPage = () => {
                       height={22}
                       width={22}
                     />
-                    &nbsp; <span>{userData.email}</span>
+                    &nbsp; <span>{pageUserData.email}</span>
                   </a>
                 ) : null}
-                {userData.instagram ? (
+                {pageUserData.instaLink ? (
                   <a
                     className="mt-5 flex items-center"
-                    href={userData.instagram.link}
+                    href={pageUserData.instaLink}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -359,8 +381,8 @@ const Profile: NextPage = () => {
                       height={22}
                       width={22}
                     />
-                    &nbsp; <span>{userData.instagram.id}</span> &nbsp;
-                    {userData.instagram.verified ? (
+                    &nbsp; <span>{pageUserData.instaId}</span> &nbsp;
+                    {pageUserData.instaVerified ? (
                       <Image
                         src="/vectors/check.svg"
                         alt="verified"
@@ -370,10 +392,10 @@ const Profile: NextPage = () => {
                     ) : null}
                   </a>
                 ) : null}
-                {userData.twitter ? (
+                {pageUserData.twitterLink ? (
                   <a
                     className="mt-5 flex items-center"
-                    href={userData.twitter.link}
+                    href={pageUserData.twitterLink}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -383,8 +405,8 @@ const Profile: NextPage = () => {
                       height={22}
                       width={22}
                     />
-                    &nbsp; <span>{userData.twitter.id}</span> &nbsp;
-                    {userData.twitter.verified ? (
+                    &nbsp; <span>{pageUserData.twitterId}</span> &nbsp;
+                    {pageUserData.twitterVerified ? (
                       <Image
                         src="/vectors/check.svg"
                         alt="verified"
@@ -394,10 +416,10 @@ const Profile: NextPage = () => {
                     ) : null}
                   </a>
                 ) : null}
-                {userData.facebook ? (
+                {pageUserData.facebookLink ? (
                   <a
                     className="mt-5 flex items-center"
-                    href={userData.facebook.link}
+                    href={pageUserData.facebookLink}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -407,8 +429,8 @@ const Profile: NextPage = () => {
                       height={22}
                       width={22}
                     />
-                    &nbsp; <span>{userData.facebook.id}</span> &nbsp;
-                    {userData.facebook.verified ? (
+                    &nbsp; <span>{pageUserData.facebookId}</span> &nbsp;
+                    {pageUserData.facebookVerified ? (
                       <Image
                         src="/vectors/check.svg"
                         alt="verified"
@@ -424,7 +446,7 @@ const Profile: NextPage = () => {
               <div className="mt-8 border-t border-lit-dark border-opacity-10">
                 <div className="mt-3 px-2 flex justify-between text-lit-gray font-OpenSans font-bold text-sm">
                   <div>Joined</div>
-                  <div>{userData.joined_on}</div>
+                  <div>{MonthYYYY(pageUserData.createdAt)}</div>
                 </div>
 
                 {isLoggedIn ? <SignOut /> : null}
@@ -511,7 +533,7 @@ const Profile: NextPage = () => {
 
         {/* profile edit modal */}
         {showEditModal ? (
-          <EditProfileModal userData={userData} close={closeEditModal} />
+          <EditProfileModal userData={pageUserData} close={closeEditModal} />
         ) : null}
       </main>
     </>
