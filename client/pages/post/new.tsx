@@ -1,8 +1,8 @@
 import type { NextPage } from "next";
 import { useState } from "react";
-import SelectInput from "../components/editPosts/selectInput";
-import TagInput from "../components/editPosts/tagInput";
-import Seo from "../components/general/seo";
+import SelectInput from "../../components/editPosts/selectInput";
+import TagInput from "../../components/editPosts/tagInput";
+import Seo from "../../components/general/seo";
 
 const ErrorPg: NextPage = () => {
   const postTypes = ["Blog", "Novel", "Short story", "Poem", "Quote"];

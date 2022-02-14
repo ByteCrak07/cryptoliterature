@@ -108,7 +108,7 @@ const Onboarding: FC<OnboardingProps> = ({ close }) => {
                 className="block w-36 hover:cursor-pointer"
               >
                 <Image
-                  src="/onboarding/writer.png"
+                  src="/onboarding/collector.jpg"
                   className="rounded-2xl"
                   alt="writer"
                   height={377}

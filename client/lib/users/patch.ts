@@ -4,7 +4,7 @@ import { ApiUrl } from "../keys";
 interface EditUserBody {
   username?: string;
   fullName?: string;
-  email?: string;
+  email?: string | null;
   imgUrl?: string;
   donationUrl?: string;
   bio?: string;
@@ -38,7 +38,7 @@ export async function updateUser(
 
   body.username = username.replace(/ /g, "_");
   body.fullName = fullName;
-  body.email = email;
+  body.email = email ? email : null;
   body.donationUrl = donationUrl;
   body.bio = bio;
   body.instaId = instaId;

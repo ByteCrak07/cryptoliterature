@@ -546,7 +546,7 @@ export default Profile;
 const DummyCards = () => {
   return (
     <>
-      <Card
+      {/* <Card
         genre="Poem"
         hash="#473658"
         title="The best way to predict the future"
@@ -618,7 +618,9 @@ const DummyCards = () => {
         name="Lara Clarke"
         currentBid="5.00 ETH"
         endingIn="05h 12m 45s"
-      />
+      /> */}
+
+      <h1>Coming soon</h1>
     </>
   );
 };

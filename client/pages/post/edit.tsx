@@ -2,19 +2,19 @@ import type { NextPage } from "next";
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 // types
-import { PostData } from "../interfaces/posts";
+import { PostData } from "../../interfaces/posts";
 // components
 import Image from "next/image";
-import Seo from "../components/general/seo";
-import TitleInput from "../components/editPosts/titleInput";
-import ToggleInput from "../components/editPosts/toggleInput";
-import ImageInput from "../components/editPosts/imgInput";
-import ImgCropModal from "../components/editPosts/imgCropModal";
-import TagInput from "../components/editPosts/tagInput";
-import SelectInput from "../components/editPosts/selectInput";
-import EditHeader from "../components/editPosts/editHeader";
+import Seo from "../../components/general/seo";
+import TitleInput from "../../components/editPosts/titleInput";
+// import ToggleInput from "../../components/editPosts/toggleInput";
+import ImageInput from "../../components/editPosts/imgInput";
+import ImgCropModal from "../../components/editPosts/imgCropModal";
+import TagInput from "../../components/editPosts/tagInput";
+import SelectInput from "../../components/editPosts/selectInput";
+import EditHeader from "../../components/editPosts/editHeader";
 
-const CKEditor = dynamic(() => import("../components/editPosts/ckeditor"), {
+const CKEditor = dynamic(() => import("../../components/editPosts/ckeditor"), {
   ssr: false,
   loading: () => (
     <div className="h-48 flex items-center justify-center bg-lit-light-gray font-Poppins text-xl font-medium">
