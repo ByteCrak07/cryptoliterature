@@ -67,7 +67,12 @@ export async function updateUser(
       return json;
     })
     .catch(async (err) => {
-      const errRes = await err.json();
+      let errRes;
+      try {
+        errRes = await err.json();
+      } catch (e) {
+        errRes = err;
+      }
 
       throw new Error(errRes.message);
     });
@@ -107,7 +112,12 @@ export async function updateUserAfterFileUpload(
       return json;
     })
     .catch(async (err) => {
-      const errRes = await err.json();
+      let errRes;
+      try {
+        errRes = await err.json();
+      } catch (e) {
+        errRes = err;
+      }
 
       throw new Error(errRes.message);
     });

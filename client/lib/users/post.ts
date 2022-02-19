@@ -46,8 +46,12 @@ export async function login(walletKey: string, signature: string) {
       return json;
     })
     .catch(async (err) => {
-      const errRes = await err.json();
-
+      let errRes;
+      try {
+        errRes = await err.json();
+      } catch (e) {
+        errRes = err;
+      }
       throw new Error(errRes.message);
     });
 
@@ -97,8 +101,12 @@ export async function createUser(
       return json;
     })
     .catch(async (err) => {
-      const errRes = await err.json();
-
+      let errRes;
+      try {
+        errRes = await err.json();
+      } catch (e) {
+        errRes = err;
+      }
       throw new Error(errRes.message);
     });
 
@@ -132,8 +140,12 @@ export async function uploadProfileImg(file: string, currentUrl: string) {
       return json;
     })
     .catch(async (err) => {
-      const errRes = await err.json();
-
+      let errRes;
+      try {
+        errRes = await err.json();
+      } catch (e) {
+        errRes = err;
+      }
       throw new Error(errRes.message);
     });
 
