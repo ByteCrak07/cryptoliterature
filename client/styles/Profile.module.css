@@ -1,0 +1,70 @@
+.bio {
+  min-width: 300px;
+  max-width: 350px;
+}
+
+.copyBtn {
+  @apply inline-flex items-center;
+}
+
+.copyBtn:hover path {
+  fill: #0b1d25;
+}
+
+.socialMedia a:hover span {
+  text-decoration: underline;
+}
+
+.tabcontent {
+  display: none;
+  animation: fadeEffect 500ms;
+}
+
+.tabcontent.active {
+  display: flex;
+}
+
+.subTab {
+  position: relative;
+}
+
+.subTab::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -10px;
+  height: 3px;
+  width: 0;
+  border-radius: 5px;
+  background-color: #0b1d25;
+  transition: width 300ms ease-in-out 100ms;
+}
+
+.subTabActive.subTab::after {
+  width: calc(100% + 10px);
+}
+
+.subTab:hover.subTab::after {
+  width: calc(100% + 10px);
+}
+
+@keyframes fadeEffect {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (max-width: 320px) {
+  .bio {
+    min-width: auto;
+  }
+
+  .copyBtn {
+    margin-left: 0;
+    margin-top: 10px;
+    display: block;
+  }
+}

@@ -1,7 +1,7 @@
 import { FC } from "react";
 import Head from "next/head";
 
-interface LayoutProps {
+interface SeoProps {
   title: string;
   description: string;
   path: string | null;
@@ -17,7 +17,7 @@ interface LayoutProps {
   authorImg?: string;
 }
 
-const Seo: FC<LayoutProps> = ({
+const Seo: FC<SeoProps> = ({
   title,
   description,
   path,

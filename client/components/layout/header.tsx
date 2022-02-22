@@ -1,22 +1,33 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import throttle from "lodash/throttle";
-// icons
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 // styles
 import styles from "../../styles/Header.module.css";
+// components
+import WalletModal from "./walletModal";
+import AuthBtn from "./authBtn";
+import {
+  WalletAuthContext,
+  WalletAuthContextType,
+} from "../../contexts/walletAuthWrapper";
 
 const Header: FC = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  // states
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const [isWalletModalOpen, setIsWalletModalOpen] = useState<boolean>(false);
   const menuBtn = useRef<HTMLDivElement>(null);
 
+  // router
   const router = useRouter();
 
+  // contexts
+  const { userData } = useContext(WalletAuthContext) as WalletAuthContextType;
+
+  // functions
   const closeSideBar = () => {
-    setIsOpen(false);
+    setIsSidebarOpen(false);
   };
 
   const setActiveLink = () => {
@@ -29,38 +40,37 @@ const Header: FC = () => {
   };
 
   useEffect(() => {
-    if (
-      isOpen &&
-      !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      )
-    ) {
-      document.body.style.overflow = "hidden";
-      document.body.style.paddingRight = "10px";
-      if (menuBtn.current) menuBtn.current.style.paddingRight = "10px";
+    if (isSidebarOpen) {
+      if (
+        !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        )
+      ) {
+        document.body.style.overflow = "hidden";
+        document.body.style.paddingRight = "10px";
+        if (menuBtn.current) menuBtn.current.style.paddingRight = "10px";
+      } else {
+        document.body.style.overflow = "hidden";
+      }
     } else {
       setTimeout(() => {
         document.body.removeAttribute("style");
         if (menuBtn.current) menuBtn.current.removeAttribute("style");
-      }, 500);
+      }, 200);
     }
-  }, [isOpen]);
+  }, [isSidebarOpen]);
 
   useEffect(() => {
     document.querySelectorAll(".sidebar a").forEach((ele) => {
       ele.addEventListener("click", closeSideBar);
     });
 
-    window.addEventListener(
-      "scroll",
-      throttle(() => {
-        if (window.scrollY > 0) {
-          document.querySelector("#nav-header")?.classList.add("shadow");
-        } else {
-          document.querySelector("#nav-header")?.classList.remove("shadow");
-        }
-      }, 200)
-    );
+    // for smooth transition of header after dom loads
+    window.onload = () => {
+      document
+        .getElementById("nav-header")
+        ?.classList.add("transition-colors", "duration-500");
+    };
 
     setActiveLink();
 
@@ -70,38 +80,62 @@ const Header: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    const addBorder = throttle(() => {
+      if (window.scrollY > 0) {
+        document
+          .querySelector("#nav-header")
+          ?.classList.add("border-b", "border-lit-dark", "border-opacity-10");
+      } else {
+        document
+          .querySelector("#nav-header")
+          ?.classList.remove(
+            "border-b",
+            "border-lit-dark",
+            "border-opacity-10"
+          );
+      }
+    }, 200);
+
+    if (window.location.pathname !== "/")
+      window.addEventListener("scroll", addBorder);
+
+    return () => {
+      window.removeEventListener("scroll", addBorder);
+    };
+  }, [router]);
+
   return (
     <header
       id="nav-header"
-      className="fixed bg-white top-0 left-0 right-0 z-10 py-5 md:py-7 px-7 md:px-10 lg:px-20 flex justify-between"
+      className="fixed bg-white dark:bg-lit-dark top-0 left-0 right-0 z-50 py-5 md:py-7 px-7 md:px-10 lg:px-20 flex justify-between"
     >
       <Link href="/">
         <a>
-          <Image src="/logo/logo.svg" alt="logo" height="37" width="237" />
+          <span className="dark:hidden">
+            <Image
+              src="/logo/logo.svg"
+              alt="logo"
+              height="37"
+              width="237"
+              loading="eager"
+            />
+          </span>
+          <span className="hidden dark:inline">
+            <Image
+              src="/logo/logo-white.svg"
+              alt="logo"
+              height="37"
+              width="237"
+              loading="eager"
+            />
+          </span>
         </a>
       </Link>
 
       {/* horizontal navbar */}
-      <nav className="hidden lg:flex items-center">
+      <nav className="hidden lg:flex items-center text-lit-dark dark:text-white">
         <ul className="flex items-center font-Poppins font-medium">
-          <li className="mx-4">
-            <Link href="/wallet">
-              <a className={`flex items-center ${styles.menu}`}>
-                <div
-                  className="bg-lit-dark h-5 w-5 rounded-full flex items-center justify-center"
-                  style={{ padding: 6 }}
-                >
-                  <FontAwesomeIcon
-                    className="inline text-white"
-                    icon={faPlus}
-                    size="xs"
-                  />
-                </div>
-                &nbsp;
-                <span>Add&nbsp;wallet</span>
-              </a>
-            </Link>
-          </li>
           <li className="mx-4">
             <Link href="/bids">
               <a className={`${styles.menu}`}>Bids</a>
@@ -118,20 +152,16 @@ const Header: FC = () => {
             </Link>
           </li>
           <li
-            className="border-l-2 border-lit-dark border-opacity-30 h-6"
+            className="border-l-2 mx-4 border-lit-dark dark:border-white border-opacity-30 h-6"
             aria-hidden="true"
           ></li>
-          <li className="mx-4">
-            <Link href="/login">
-              <a className={`${styles.menu}`}>Login</a>
-            </Link>
-          </li>
-          <li>
-            <Link href="/sign-up">
-              <a className="py-2 px-5 border border-lit-dark rounded-full transition-colors hover:bg-lit-dark hover:text-white">
-                Sign&nbsp;up
-              </a>
-            </Link>
+          <li className={`mx-4 ${userData ? "-my-5" : ""}`}>
+            <AuthBtn
+              style={styles.walletBtn}
+              openModal={() => {
+                setIsWalletModalOpen(true);
+              }}
+            />
           </li>
         </ul>
       </nav>
@@ -141,10 +171,10 @@ const Header: FC = () => {
         <div className="absolute z-20 left-0 top-0 transform -translate-x-full translate-y-1/4">
           <button
             className={`flex ${styles.wrapperMenu} ${
-              isOpen ? styles.open : ""
+              isSidebarOpen ? styles.open : ""
             }`}
             onClick={() => {
-              setIsOpen(!isOpen);
+              setIsSidebarOpen(!isSidebarOpen);
             }}
           >
             <div
@@ -161,17 +191,17 @@ const Header: FC = () => {
       {/* sidenav overlay */}
       <div
         className={`fixed lg:hidden inset-0 bg-lit-dark transition duration-500 bg-opacity-30 transform ${
-          !isOpen ? "translate-x-full" : ""
+          !isSidebarOpen ? "translate-x-full" : ""
         }`}
         onClick={() => {
-          setIsOpen(false);
+          closeSideBar();
         }}
       ></div>
 
       {/* side navbar */}
       <div
-        className={`sidebar bg-white lg:hidden w-60 fixed right-0 top-0 bottom-0 transition duration-500 transform ${
-          !isOpen ? "translate-x-full" : ""
+        className={`sidebar bg-white lg:hidden w-60 fixed right-0 top-0 bottom-0 transition duration-500 rounded-l-xl transform ${
+          !isSidebarOpen ? "translate-x-full" : ""
         }`}
       >
         <nav>
@@ -188,23 +218,6 @@ const Header: FC = () => {
             </Link>
           </div>
           <ul className="flex flex-col items-center font-Poppins font-medium">
-            <li className="my-4">
-              <Link href="/wallet">
-                <a className={`flex items-center ${styles.menu}`}>
-                  <div
-                    className="bg-lit-dark h-5 w-5 rounded-full flex items-center justify-center"
-                    style={{ padding: 6 }}
-                  >
-                    <FontAwesomeIcon
-                      className="inline text-white"
-                      icon={faPlus}
-                    />
-                  </div>
-                  &nbsp;
-                  <span>Add&nbsp;wallet</span>
-                </a>
-              </Link>
-            </li>
             <li className="my-4">
               <Link href="/bids">
                 <a className={`${styles.menu}`}>Bids</a>
@@ -225,20 +238,26 @@ const Header: FC = () => {
               aria-hidden="true"
             ></li>
             <li className="my-4">
-              <Link href="/login">
-                <a className={`${styles.menu}`}>Login</a>
-              </Link>
-            </li>
-            <li className="my-4">
-              <Link href="/sign-up">
-                <a className="py-2 px-5 border border-lit-dark rounded-full hover:bg-lit-dark hover:text-white">
-                  Sign&nbsp;up
-                </a>
-              </Link>
+              <AuthBtn
+                skipAutoLogin
+                style={styles.walletBtnDark}
+                openModal={() => {
+                  closeSideBar();
+                  setIsWalletModalOpen(true);
+                }}
+              />
             </li>
           </ul>
         </nav>
       </div>
+
+      {isWalletModalOpen ? (
+        <WalletModal
+          close={() => {
+            setIsWalletModalOpen(false);
+          }}
+        />
+      ) : null}
     </header>
   );
 };

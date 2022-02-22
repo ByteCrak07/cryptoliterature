@@ -1,6 +1,6 @@
 import type { AppProps } from "next/app";
 import { useEffect } from "react";
-import { init } from "../lib/ga";
+import { init } from "../lib/general/ga";
 import Layout from "../components/layout/layout";
 
 // styles

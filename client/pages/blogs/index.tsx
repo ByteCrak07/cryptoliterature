@@ -4,7 +4,8 @@ import Seo from "../../components/general/seo";
 import LatestBlogCard from "../../components/blogs/latest-blog-card";
 import BlogCard from "../../components/blogs/card";
 // ghost apis
-import { getPosts } from "../../lib/posts";
+import { GhostPost } from "../../interfaces/posts";
+import { getPosts } from "../../lib/ghost/posts";
 
 export const getStaticProps: GetStaticProps = async () => {
   const posts = await getPosts();
@@ -22,25 +23,13 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 };
 
-interface Post {
-  title: string;
-  excerpt: string;
-  custom_excerpt: string;
-  slug: string;
-  feature_image?: string;
-  feature_image_alt?: string;
-  featured: boolean;
-  primary_author: { profile_image?: string; name?: string };
-  published_at: string;
-}
-
 interface BlogsPageProps {
-  posts: Array<Post>;
+  posts: Array<GhostPost>;
 }
 
 const Blogs: NextPage<BlogsPageProps> = ({ posts }) => {
   let featuredIndex = 0;
-  let featuredPost: Post = posts[0];
+  let featuredPost: GhostPost = posts[0];
 
   posts.forEach((post, i) => {
     if (post.featured) {
@@ -50,7 +39,7 @@ const Blogs: NextPage<BlogsPageProps> = ({ posts }) => {
   });
 
   return (
-    <>
+    <main className="main-div">
       <Seo
         title="Blogs | Cryptoliterature"
         description="Our latest blogs - Cryptoliterature an epiphany to the literary world"
@@ -131,7 +120,7 @@ const Blogs: NextPage<BlogsPageProps> = ({ posts }) => {
           </div>
         </section>
       </section>
-    </>
+    </main>
   );
 };
 

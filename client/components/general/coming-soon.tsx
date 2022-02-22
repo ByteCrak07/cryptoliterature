@@ -4,20 +4,10 @@ import Link from "next/link";
 
 const ComingSoon: FC = () => {
   useEffect(() => {
-    document
-      .getElementById("__next")
-      ?.classList.add("h-screen", "flex", "flex-col");
-    document
-      .getElementsByTagName("main")[0]
-      .classList.add("bg-lit-dark", "flex-1");
+    document.getElementsByTagName("main")[0].classList.add("bg-lit-dark");
 
     return () => {
-      document
-        .getElementById("__next")
-        ?.classList.remove("h-screen", "flex", "flex-col");
-      document
-        .getElementsByTagName("main")[0]
-        .classList.remove("bg-lit-dark", "flex-1");
+      document.getElementsByTagName("main")[0].classList.remove("bg-lit-dark");
     };
   }, []);
 
