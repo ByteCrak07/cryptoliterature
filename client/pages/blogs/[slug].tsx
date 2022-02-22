@@ -55,7 +55,7 @@ const PostPage: NextPage<PostPageProps> = ({ post }) => {
     });
   }, [router]);
 
-  if (router.isFallback)
+  if (!post)
     return (
       <main className="main-div">
         <Seo

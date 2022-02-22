@@ -1,10 +1,11 @@
 import { FC, useEffect, useState } from "react";
+import RingSpinner from "../spinners/ringSpinner";
 
 interface DeleteModalProps {
   isArchived: boolean;
   close: () => void;
-  onArchive: () => void;
-  onDelete: () => void;
+  onArchive: (callback: () => void) => void;
+  onDelete: (callback: () => void) => void;
 }
 
 const DeleteModal: FC<DeleteModalProps> = ({
@@ -15,6 +16,7 @@ const DeleteModal: FC<DeleteModalProps> = ({
 }) => {
   // states
   const [deleteMethod, setDeleteMethod] = useState("");
+  const [isDisabled, setIsDisabled] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -94,17 +96,27 @@ const DeleteModal: FC<DeleteModalProps> = ({
           </button>
         ) : deleteMethod === "delete" ? (
           <button
-            onClick={onDelete}
-            className="bg-red-600 w-28 px-3 py-1 text-white rounded-md"
+            disabled={isDisabled}
+            onClick={() => {
+              setIsDisabled(true);
+              onDelete(close);
+            }}
+            className="flex justify-evenly items-center bg-red-600 w-28 px-3 py-1 text-white rounded-md"
           >
-            Delete
+            Delete{" "}
+            {isDisabled ? <RingSpinner width={18} color="white" /> : null}
           </button>
         ) : (
           <button
-            onClick={onArchive}
-            className="bg-lit-dark w-28 px-3 py-1 text-white rounded-md"
+            disabled={isDisabled}
+            onClick={() => {
+              setIsDisabled(true);
+              onArchive(close);
+            }}
+            className="flex justify-evenly items-center bg-lit-dark w-28 px-3 py-1 text-white rounded-md"
           >
-            Archive
+            Archive{" "}
+            {isDisabled ? <RingSpinner width={18} color="white" /> : null}
           </button>
         )}
       </div>

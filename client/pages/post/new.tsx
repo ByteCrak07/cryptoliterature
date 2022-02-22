@@ -1,21 +1,45 @@
 import type { NextPage } from "next";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useContext, useEffect, useState } from "react";
 import SelectInput from "../../components/editPosts/selectInput";
 import TagInput from "../../components/editPosts/tagInput";
 import Seo from "../../components/general/seo";
+import { showToast } from "../../components/general/toast";
+import {
+  WalletAuthContext,
+  WalletAuthContextType,
+} from "../../contexts/walletAuthWrapper";
+import { createNewPost } from "../../lib/posts/post";
 
 const ErrorPg: NextPage = () => {
   const postTypes = ["Blog", "Novel", "Short story", "Poem", "Quote"];
+
+  // contexts
+  const { user } = useContext(WalletAuthContext) as WalletAuthContextType;
 
   // states
   const [title, setTitle] = useState<string>("");
   const [type, setType] = useState<string>("");
   const [genre, setGenre] = useState<Array<string>>([]);
 
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!window.ethereum?.selectedAddress) {
+      router.replace("/").then(() => {
+        showToast("Add wallet to create a post");
+      });
+    }
+  }, [router, user]);
+
   // creating new post
-  const createPost = () => {
+  const createPost = async () => {
     console.log("create post");
     // TODO: api for creating new post
+    const postSlug = await createNewPost(title, type, genre);
+    router.push(
+      `/post/${postSlug}/edit?key=${window.ethereum?.selectedAddress}`
+    );
   };
 
   return (

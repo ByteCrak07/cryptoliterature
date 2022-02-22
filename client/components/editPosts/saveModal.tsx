@@ -1,10 +1,11 @@
 import { FC, useEffect, useState } from "react";
+import RingSpinner from "../spinners/ringSpinner";
 
 interface SaveModalProps {
   isPublished: boolean;
   close: () => void;
-  onPublish: () => void;
-  onDraft: () => void;
+  onPublish: (callback: () => void) => void;
+  onDraft: (callback: () => void) => void;
 }
 
 const SaveModal: FC<SaveModalProps> = ({
@@ -15,6 +16,7 @@ const SaveModal: FC<SaveModalProps> = ({
 }) => {
   // states
   const [saveMethod, setSaveMethod] = useState("");
+  const [isDisabled, setIsDisabled] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -95,17 +97,26 @@ const SaveModal: FC<SaveModalProps> = ({
           </button>
         ) : saveMethod === "publish" ? (
           <button
-            onClick={onPublish}
-            className="bg-lit-dark w-28 px-3 py-1 text-white rounded-md"
+            disabled={isDisabled}
+            onClick={() => {
+              setIsDisabled(true);
+              onPublish(close);
+            }}
+            className="flex justify-evenly items-center bg-lit-dark w-28 px-3 py-1 text-white rounded-md"
           >
-            Publish
+            Publish{" "}
+            {isDisabled ? <RingSpinner width={18} color="white" /> : null}
           </button>
         ) : (
           <button
-            onClick={onDraft}
-            className="bg-lit-dark w-28 px-3 py-1 text-white rounded-md"
+            disabled={isDisabled}
+            onClick={() => {
+              setIsDisabled(true);
+              onDraft(close);
+            }}
+            className="flex justify-evenly items-center bg-lit-dark w-28 px-3 py-1 text-white rounded-md"
           >
-            Draft
+            Draft {isDisabled ? <RingSpinner width={18} color="white" /> : null}
           </button>
         )}
       </div>

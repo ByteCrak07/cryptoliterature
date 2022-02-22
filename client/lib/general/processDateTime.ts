@@ -13,8 +13,18 @@ const monthsShort = [
   "Dec",
 ];
 
+export function DDMMMYYYY(time: Date | number) {
+  if (typeof time === "number" || typeof time === "string")
+    time = new Date(time);
+
+  return `${time.getDate()} ${
+    monthsShort[time.getMonth()]
+  } ${time.getFullYear()}`;
+}
+
 export function DDMMMYYYYTwelveHr(time: Date | number) {
-  if (typeof time === "number") time = new Date(time);
+  if (typeof time === "number" || typeof time === "string")
+    time = new Date(time);
 
   return `${time.getDate()} ${
     monthsShort[time.getMonth()]

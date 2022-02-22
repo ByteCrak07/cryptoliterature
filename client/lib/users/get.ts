@@ -58,8 +58,6 @@ export async function getUserWithUsername(username: string) {
       } catch (e) {
         errRes = err;
       }
-
-      throw new Error(errRes.message);
     });
 
   if (data) return data;

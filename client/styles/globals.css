@@ -53,8 +53,13 @@
   @apply border border-lit-dark !important;
 }
 
-.ck-editor__main {
+.ck-editor__main,
+.ck-content {
   @apply prose lg:prose-lg xl:prose-xl max-w-none w-full;
+}
+
+.ck-content :where(pre code):not(:where([class~="not-prose"] *)) {
+  color: var(--tw-prose-code);
 }
 
 .ck-editor__main > div {

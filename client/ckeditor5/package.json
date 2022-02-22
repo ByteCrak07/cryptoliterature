@@ -54,8 +54,5 @@
   },
   "scripts": {
     "build": "webpack --mode production"
-  },
-  "dependencies": {
-    "ckeditor5-image-remove-event-callback-plugin": "^1.1.3"
   }
 }

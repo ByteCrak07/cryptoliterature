@@ -17,7 +17,7 @@ const Footer: FC = () => {
           </a>
         </Link>
         <span className="text-xs">
-          &copy; 2021 Cryptoliterature. All rights reserved
+          &copy; 2022 Cryptoliterature. All rights reserved
         </span>
       </div>
 

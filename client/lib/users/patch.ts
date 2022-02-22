@@ -81,7 +81,7 @@ export async function updateUser(
   else return null;
 }
 
-export async function updateUserAfterFileUpload(
+export async function updateUserAfterImageUpload(
   walletKey: string,
   imgUrl: string
 ) {

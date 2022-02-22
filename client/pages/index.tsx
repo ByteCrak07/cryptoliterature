@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { FC, useEffect, useState, MouseEvent } from "react";
@@ -18,16 +18,38 @@ import Seo from "../components/general/seo";
 // styles
 import styles from "../styles/Home.module.css";
 import ComingSoon from "../components/general/coming-soon";
+import { getPosts } from "../lib/ghost/posts";
+import { GhostPost } from "../interfaces/posts";
+
+export const getStaticProps: GetStaticProps = async () => {
+  const posts = await getPosts();
+
+  if (!posts) {
+    return {
+      notFound: true,
+      revalidate: 600,
+    };
+  }
+
+  return {
+    props: { latestPost: posts[0] },
+    revalidate: 600,
+  };
+};
+
+interface HomePageProps {
+  latestPost: GhostPost;
+}
 
 SwiperCore.use([Autoplay]);
 
-const Home: NextPage = () => {
+const Home: NextPage<HomePageProps> = ({ latestPost }) => {
   const [selected, setSelected] = useState<number>(0);
 
   const filters = ["All", "Short Story", "Poem", "Quote"];
 
   useEffect(() => {
-    var countDownDate = new Date("Feb 14, 2022 20:00:00 UTC+5:30").getTime();
+    var countDownDate = new Date("Feb 28, 2022 20:00:00 UTC+5:30").getTime();
 
     var timer = setInterval(function () {
       // Current date and time
@@ -211,9 +233,9 @@ const Home: NextPage = () => {
               </div>
 
               <div id="intro-section" className="mt-14 ml-5">
-                <Link href="/mi-amor">
-                  <a className="py-2 px-5 bg-white text-lit-dark rounded-full font-Poppins font-medium text-xl sm:bg-opacity-80 hover:bg-opacity-100">
-                    Register now
+                <Link href="/wallet">
+                  <a className="py-2 px-5 bg-white text-lit-dark rounded-full font-Poppins font-medium text-xl sm:bg-opacity-90 hover:bg-opacity-100">
+                    Create your account
                   </a>
                 </Link>
               </div>
@@ -366,6 +388,47 @@ const Home: NextPage = () => {
                 width="415px"
               />
             </div>
+          </div>
+        </section>
+
+        <section className="py-32">
+          <div className="flex items-baseline">
+            <h1 className="font-Poppins font-semibold text-2xl">Latest Blog</h1>
+            <Link href="/blogs">
+              <a className="font-OpenSans ml-3 block font-semibold">
+                View all <span>&gt;&gt;</span>
+              </a>
+            </Link>
+          </div>
+          <div className="lg:px-5 xl:px-32">
+            <LatestBlogCard
+              image={
+                latestPost.feature_image
+                  ? {
+                      src: latestPost.feature_image,
+                      alt: latestPost.feature_image_alt,
+                      width: "2000",
+                      height: "1210",
+                    }
+                  : undefined
+              }
+              title={latestPost.title}
+              description={
+                latestPost.custom_excerpt
+                  ? latestPost.custom_excerpt
+                  : latestPost.excerpt
+              }
+              link={`/blogs/${latestPost.slug}`}
+              author={
+                latestPost.primary_author
+                  ? {
+                      imgSrc: latestPost.primary_author.profile_image,
+                      name: latestPost.primary_author.name,
+                    }
+                  : undefined
+              }
+              time={latestPost.published_at}
+            />
           </div>
         </section>
       </div>

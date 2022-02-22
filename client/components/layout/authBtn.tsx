@@ -96,7 +96,11 @@ const AuthBtn: FC<AuthBtnProps> = ({ style, openModal, skipAutoLogin }) => {
     <>
       {!isBtnLoading ? (
         !user ? (
-          <button onClick={openModal} className={style}>
+          <button
+            id={!skipAutoLogin ? "walletAuthBtn" : ""}
+            onClick={openModal}
+            className={style}
+          >
             <div
               className="bg-lit-dark h-5 w-5 rounded-full flex items-center justify-center"
               style={{ padding: 6 }}

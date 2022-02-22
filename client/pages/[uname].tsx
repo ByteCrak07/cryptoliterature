@@ -9,7 +9,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserEdit } from "@fortawesome/free-solid-svg-icons";
 // components
 import Seo from "../components/general/seo";
-import Card from "../components/bids/card";
 import ImageInput from "../components/editPosts/imgInput";
 import ImgCropModal from "../components/editPosts/imgCropModal";
 import { showToast } from "../components/general/toast";
@@ -25,6 +24,10 @@ import { MonthYYYY } from "../lib/general/processDateTime";
 import { getUserWithUsername } from "../lib/users/get";
 import { uploadProfileImg } from "../lib/users/post";
 import RingSpinner from "../components/spinners/ringSpinner";
+import PublishedPosts from "../components/profile/publishedPosts";
+import DraftPosts from "../components/profile/draftPosts";
+import ArchivedPosts from "../components/profile/archivedPosts";
+import { useRouter } from "next/router";
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   let userData;
@@ -48,6 +51,8 @@ interface ProfileProps {
 }
 
 const Profile: NextPage<ProfileProps> = ({ serverUserData }) => {
+  const PublicTabs = ["Created", "Collected"];
+  const PrivateTabs = ["Published", "Drafts", "Bidding", "Archived"];
   const BiddingTabs = ["Ongoing", "Completed"];
 
   // contexts
@@ -58,17 +63,20 @@ const Profile: NextPage<ProfileProps> = ({ serverUserData }) => {
   // states
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [pageUserData, setPageUserData] = useState<UserProfile>(serverUserData);
-  const [tabs, setTabs] = useState<Array<string>>(["Created", "Collected"]);
+  const [tabs, setTabs] = useState<Array<string>>(PublicTabs);
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [selectedBiddingTab, setSelectedBiddingTab] = useState<number>(0);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
 
   // states for profile image
   const [tempImgUrl, setTempImgUrl] = useState<string>("");
-  const [croppedImgUrl, setCroppedImgUrl] = useState(pageUserData.imgUrl);
+  const [croppedImgUrl, setCroppedImgUrl] = useState(serverUserData.imgUrl);
   const [showCropModal, setShowCropModal] = useState<boolean>(false);
   const [showProfileImgSpinner, setShowProfileImgSpinner] =
     useState<boolean>(false);
+
+  // router
+  const router = useRouter();
 
   // setting is logged in
   useEffect(() => {
@@ -78,7 +86,10 @@ const Profile: NextPage<ProfileProps> = ({ serverUserData }) => {
 
   // if logged in
   useEffect(() => {
-    if (isLoggedIn) setTabs(["Published", "Draft", "Bidding"]);
+    if (isLoggedIn) setTabs(PrivateTabs);
+    else setTabs(PublicTabs);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
 
   // profile edit
@@ -109,7 +120,7 @@ const Profile: NextPage<ProfileProps> = ({ serverUserData }) => {
       // api for storing image and update profile with new img url
       const newUrl = await uploadProfileImg(newImgUrl, pageUserData.imgUrl);
 
-      // otherwise image wouldnt be updated due to next image caching
+      // otherwise image wouldnt be updated
       if (newUrl) {
         setCroppedImgUrl(newImgUrl);
         setUserData({ ...pageUserData, imgUrl: newImgUrl });
@@ -145,6 +156,17 @@ const Profile: NextPage<ProfileProps> = ({ serverUserData }) => {
     };
   }, []);
 
+  if (!serverUserData)
+    return (
+      <main className="main-div">
+        <Seo
+          title="Loading | Cryptoliterature"
+          description="Loading..."
+          path={null}
+        />
+      </main>
+    );
+
   return (
     <>
       <Seo
@@ -173,7 +195,7 @@ const Profile: NextPage<ProfileProps> = ({ serverUserData }) => {
               </span>
             </button>
 
-            <Link href="/new">
+            <Link href="/post/new">
               <a className="flex items-center bg-white p-3 sm:py-2 sm:px-3 rounded-full sm:rounded-lg border border-lit-dark border-opacity-50 hover:border-opacity-100 fixed sm:absolute bottom-5 sm:bottom-3 right-5 md:right-16 lg:right-32">
                 <Image
                   src="/vectors/edit.svg"
@@ -182,7 +204,7 @@ const Profile: NextPage<ProfileProps> = ({ serverUserData }) => {
                   width={18}
                 />
                 <span className="font-Poppins text-lg font-medium hidden sm:inline">
-                  &nbsp;&nbsp;Create new blog
+                  &nbsp;&nbsp;Create new post
                 </span>
               </a>
             </Link>
@@ -480,9 +502,21 @@ const Profile: NextPage<ProfileProps> = ({ serverUserData }) => {
                 id={`profile-tab${i}`}
                 key={`profile-tab${i}`}
               >
-                {filter !== "Bidding" ? (
-                  <DummyCards />
-                ) : (
+                {filter === "Created" || filter === "Published" ? (
+                  <PublishedPosts walletKey={pageUserData.walletKey} />
+                ) : null}
+
+                {filter === "Drafts" ? (
+                  <DraftPosts walletKey={pageUserData.walletKey} />
+                ) : null}
+
+                {filter === "Archived" ? (
+                  <ArchivedPosts walletKey={pageUserData.walletKey} />
+                ) : null}
+
+                {filter === "Collected" ? <ComingSoonCard /> : null}
+
+                {filter === "Bidding" ? (
                   <>
                     <div className="border-b mx-8 border-lit-dark border-opacity-10 pb-2 w-full">
                       {BiddingTabs.map((tabName, j) => (
@@ -512,11 +546,11 @@ const Profile: NextPage<ProfileProps> = ({ serverUserData }) => {
                         id={`profile-bidding-tab${j}`}
                         key={`profile-bidding-tab${j}`}
                       >
-                        <DummyCards />
+                        <ComingSoonCard />
                       </div>
                     ))}
                   </>
-                )}
+                ) : null}
               </div>
             ))}
           </section>
@@ -543,84 +577,6 @@ const Profile: NextPage<ProfileProps> = ({ serverUserData }) => {
 export default Profile;
 
 // TODO: remove dummycards
-const DummyCards = () => {
-  return (
-    <>
-      {/* <Card
-        genre="Poem"
-        hash="#473658"
-        title="The best way to predict the future"
-        avatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-        name="Lara Clarke"
-        currentBid="5.00 ETH"
-        endingIn="05h 12m 45s"
-      />
-      <Card
-        genre="Quote"
-        hash="#473658"
-        title="The best way to predict the furture"
-        avatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-        name="Lara Clarke"
-        soldFor="5.00 ETH"
-        ownedBy="James Hood"
-        ownedByAvatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-      />
-      <Card
-        genre="Poem"
-        hash="#473658"
-        title="The best way to predict the furture"
-        avatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-        name="Lara Clarke"
-        uploadedIn="5 June 2020"
-      />
-      <Card
-        genre="Short Story"
-        hash="#473658"
-        title="The best way to predict the future"
-        avatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-        name="Lara Clarke"
-        ownedBy="James Hood"
-        ownedByAvatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-      />
-      <Card
-        genre="Quote"
-        hash="#473658"
-        title="The best way to predict the future"
-        avatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-        name="Lara Clarke"
-        reservePrice="5.00 ETH"
-        listedBy="James Maxwell"
-        listedByAvatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-      />
-      <Card
-        genre="Short Story"
-        hash="#473658"
-        title="The best way to predict the future"
-        avatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-        name="Lara Clarke"
-        soldFor="5.00 ETH"
-        ownedBy="James Hood"
-        ownedByAvatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-      />
-      <Card
-        genre="Short Story"
-        hash="#473658"
-        title="The best way to predict the future"
-        avatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-        name="Lara Clarke"
-        uploadedIn="5 June 2020"
-      />
-      <Card
-        genre="Poem"
-        hash="#473658"
-        title="The best way to predict the future"
-        avatar="https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-        name="Lara Clarke"
-        currentBid="5.00 ETH"
-        endingIn="05h 12m 45s"
-      /> */}
-
-      <h1>Coming soon</h1>
-    </>
-  );
+const ComingSoonCard = () => {
+  return <h1>Coming soon</h1>;
 };

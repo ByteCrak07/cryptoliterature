@@ -39,8 +39,6 @@ const Card: FC<CardProps> = ({
   return (
     <div
       className={`w-80 rounded-lg border-2 border-lit-dark border-opacity-10 font-Poppins overflow-hidden ${
-        uploadedIn ? "bg-gray-100" : ""
-      } ${
         selected === genre || selected === "All" || selected === undefined
           ? ""
           : "hidden"

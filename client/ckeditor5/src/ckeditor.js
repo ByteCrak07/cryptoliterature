@@ -39,7 +39,6 @@ import Link from "@ckeditor/ckeditor5-link/src/link.js";
 import LinkImage from "@ckeditor/ckeditor5-link/src/linkimage.js";
 import List from "@ckeditor/ckeditor5-list/src/list.js";
 import ListProperties from "@ckeditor/ckeditor5-list/src/listproperties.js";
-import Markdown from "@ckeditor/ckeditor5-markdown-gfm/src/markdown.js";
 import MediaEmbed from "@ckeditor/ckeditor5-media-embed/src/mediaembed.js";
 import MediaEmbedToolbar from "@ckeditor/ckeditor5-media-embed/src/mediaembedtoolbar.js";
 import Mention from "@ckeditor/ckeditor5-mention/src/mention.js";
@@ -69,7 +68,6 @@ import TextPartLanguage from "@ckeditor/ckeditor5-language/src/textpartlanguage.
 import TextTransformation from "@ckeditor/ckeditor5-typing/src/texttransformation.js";
 import Underline from "@ckeditor/ckeditor5-basic-styles/src/underline.js";
 import WordCount from "@ckeditor/ckeditor5-word-count/src/wordcount.js";
-import ImageRemoveEventCallbackPlugin from "ckeditor5-image-remove-event-callback-plugin";
 
 class Editor extends ClassicEditor {}
 
@@ -100,7 +98,6 @@ Editor.builtinPlugins = [
   Image,
   ImageCaption,
   ImageInsert,
-  ImageRemoveEventCallbackPlugin,
   ImageResize,
   ImageStyle,
   ImageToolbar,
@@ -112,7 +109,6 @@ Editor.builtinPlugins = [
   LinkImage,
   List,
   ListProperties,
-  Markdown,
   MediaEmbed,
   MediaEmbedToolbar,
   Mention,

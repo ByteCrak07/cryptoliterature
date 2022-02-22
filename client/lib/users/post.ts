@@ -1,7 +1,7 @@
 import { getCookie } from "../general/cookies";
 import { DataURIToBlob } from "../general/imgToBlob";
 import { ApiUrl } from "../keys";
-import { updateUserAfterFileUpload } from "./patch";
+import { updateUserAfterImageUpload } from "./patch";
 
 interface LoginBody {
   walletKey: string;
@@ -151,7 +151,7 @@ export async function uploadProfileImg(file: string, currentUrl: string) {
 
   if (data) {
     if (data.url !== currentUrl) {
-      const newData = await updateUserAfterFileUpload(
+      const newData = await updateUserAfterImageUpload(
         window.ethereum?.selectedAddress as string,
         data.url
       );

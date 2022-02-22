@@ -1,16 +1,37 @@
-interface PostData {
-  published_on: number;
+import { UserProfile } from "./profile";
+
+interface PostDataShort {
+  id: number;
   title: string;
-  excerpt: string;
+  type: string;
   slug: string;
-  feature_image?: string;
-  feature_image_alt?: string;
+  author: { username: string; fullName?: string; imgUrl: string };
+  publishedOn?: Date;
+  createdAt: Date;
+}
+
+interface CreatePostData {
+  title: string;
   type: string;
   genre: Array<string>;
-  content: string;
-  author: { profile_id: number; profile_image?: string; name?: string };
+}
+
+interface PostData {
+  id: number;
+  title: string;
+  type: string;
+  genre: Array<string>;
+  slug: string;
+  excerpt?: string;
+  featureImage?: string;
+  featureImageAlt?: string;
+  content?: string;
+  author: UserProfile;
+  authorWalletKey?: string;
   published: boolean;
   archived: boolean;
+  createdAt?: Date;
+  publishedOn?: Date;
 }
 
 interface GhostPost {
@@ -35,4 +56,4 @@ interface GhostPost {
   twitter_image: string;
 }
 
-export type { PostData, GhostPost };
+export type { PostDataShort, CreatePostData, PostData, GhostPost };
