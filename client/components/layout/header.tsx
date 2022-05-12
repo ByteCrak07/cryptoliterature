@@ -97,8 +97,7 @@ const Header: FC = () => {
       }
     }, 200);
 
-    if (window.location.pathname !== "/")
-      window.addEventListener("scroll", addBorder);
+    window.addEventListener("scroll", addBorder);
 
     return () => {
       window.removeEventListener("scroll", addBorder);

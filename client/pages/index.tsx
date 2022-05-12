@@ -44,121 +44,50 @@ interface HomePageProps {
 SwiperCore.use([Autoplay]);
 
 const Home: NextPage<HomePageProps> = ({ latestPost }) => {
-  const [selected, setSelected] = useState<number>(0);
+  const [email, setEmail] = useState("");
 
-  const filters = ["All", "Short Story", "Poem", "Quote"];
+  const steps = [
+    {
+      icon: "wallet",
+      title: "Sign up",
+      content:
+        "Click the “Sign Up” button and connect your wallet of your choice to cryptoliterature.",
+    },
+    {
+      icon: "profile",
+      title: "Set up your profile",
+      content:
+        "Add Profile details, Social Links and fill in other necessary details.",
+    },
+    {
+      icon: "nft",
+      title: "Create your NFT’s.",
+      content:
+        "Upload or write your literature work, fill in the details and publish it for bidding.",
+    },
+    {
+      icon: "community",
+      title: "Join our community",
+      content:
+        "Join our discord server and follow us on our socials to keep yourself connected with the latest updates.",
+    },
+  ];
 
-  useEffect(() => {
-    var countDownDate = new Date("Feb 28, 2022 20:00:00 UTC+5:30").getTime();
+  const resources = [
+    "This is how you easily setup your metamask wallet",
+    "This is how you add funds to your wallets",
+    "Things to consider before buying an NFT",
+  ];
 
-    var timer = setInterval(function () {
-      // Current date and time
-      var now = new Date().getTime();
-
-      // Difference between now and the count down date
-      var diff = countDownDate - now;
-
-      var days, hours, minutes, seconds;
-
-      if (diff < 0) {
-        days = hours = minutes = seconds = 0;
-      } else {
-        days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        seconds = Math.floor((diff % (1000 * 60)) / 1000);
-      }
-
-      // Display the values
-      (document.getElementById("time-days") as Element).innerHTML = `${days}`;
-      (document.getElementById("time-hours") as Element).innerHTML = `${hours}`;
-      (
-        document.getElementById("time-mins") as Element
-      ).innerHTML = `${minutes}`;
-      (
-        document.getElementById("time-secs") as Element
-      ).innerHTML = `${seconds}`;
-
-      // If the count down is finished stop
-      if (diff < 0) {
-        clearInterval(timer);
-      }
-    }, 1000);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
-
-  // switching dark mode
-  useEffect(() => {
-    const isInViewport = () => {
-      const learnMore = document.getElementById("switch-darkmode");
-
-      if (learnMore) {
-        const rect = learnMore.getBoundingClientRect();
-
-        return (
-          rect.top >= 0 &&
-          rect.left >= 0 &&
-          rect.bottom <=
-            (window.innerHeight || document.documentElement.clientHeight) &&
-          rect.right <=
-            (window.innerWidth || document.documentElement.clientWidth)
-        );
-      } else return false;
-    };
-
-    const applyDarkMode = throttle(() => {
-      if (isInViewport()) document.documentElement.classList.add("dark");
-      else document.documentElement.classList.remove("dark");
-    }, 100);
-
-    applyDarkMode();
-
-    window.addEventListener("scroll", applyDarkMode);
-
-    return () => {
-      document.documentElement.classList.remove("dark");
-      window.removeEventListener("scroll", applyDarkMode);
-    };
-  }, []);
-
-  // handling drag to learn more
-  const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-
-    handleMouseMove(e);
-    document.onmousemove = handleMouseMove;
-    document.onmouseup = handleMouseUp;
-  };
-
-  const handleMouseUp = () => {
-    document.onmousemove = null;
-    document.onmouseup = null;
-  };
-
-  const handleMouseMove = (
-    e: globalThis.MouseEvent | MouseEvent<HTMLDivElement>
-  ) => {
-    e.preventDefault();
-    const landingSection = document.getElementById("landing-section");
-    const slidesSection = document.getElementById("slides-section");
-
-    // -24 for adjusting window to the learn more text
-    if (landingSection && slidesSection) {
-      document.documentElement.scrollTop = window.innerHeight - e.clientY - 24;
-
-      if (window.scrollY > landingSection.clientHeight / 3) {
-        handleMouseUp();
-        // -96 for offsetting from header 6rem (96px)
-        window.scrollTo({
-          top: slidesSection.offsetTop - 96,
-          behavior: "smooth",
-        });
-      }
-    }
-  };
+  const communities = [
+    { name: "insta", href: "https://www.instagram.com/cryptoliteratures" },
+    { name: "twitter", href: "https://twitter.com/CryptoLiteratur" },
+    {
+      name: "fb",
+      href: "https://www.facebook.com/CryptoLiterature-105070572070545",
+    },
+    { name: "discord", href: "https://discord.gg/MVRtmu4bBQ" },
+  ];
 
   return (
     <main>
@@ -168,226 +97,106 @@ const Home: NextPage<HomePageProps> = ({ latestPost }) => {
         path="/"
       />
 
-      <div className="main-div bg-lit-dark transition-colors">
-        <section
-          id="landing-section"
-          className="text-white flex items-center pb-24 relative"
-          style={{ height: `calc(100vh - 6rem)` }}
-        >
-          <div className="flex items-center font-OpenSans w-full">
-            <div className="flex-3 flex justify-evenly align-items flex-col md:mr-5">
-              <div>
-                <h2 className="text-lg md:text-xl">
-                  Cryptoliterature presents
-                </h2>
-                <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold">
-                  Mi Amor
-                </h1>
-              </div>
-
-              <div className="flex flex-wrap sm:flex-nowrap gap-y-2 gap-x-2 sm:gap-x-4 mt-10">
-                <div className="bg-[#1F3139] shadow-2xl shadow-black p-2 sm:p-4 rounded-xl">
-                  <div className="text-xs sm:text-sm lg:text-base xl:text-xl">
-                    DAYS
-                  </div>
-                  <div
-                    id="time-days"
-                    className="font-Merriweather text-4xl sm:text-5xl lg:text-7xl xl:text-9xl"
-                  >
-                    &nbsp;
-                  </div>
-                </div>
-                <div className="bg-[#1F3139] shadow-2xl shadow-black p-2 sm:p-4 rounded-xl">
-                  <div className="text-xs sm:text-sm lg:text-base xl:text-xl">
-                    HOURS
-                  </div>
-                  <div
-                    id="time-hours"
-                    className="font-Merriweather text-4xl sm:text-5xl lg:text-7xl xl:text-9xl"
-                  >
-                    &nbsp;
-                  </div>
-                </div>
-                <div className="bg-[#1F3139] shadow-2xl shadow-black p-2 sm:p-4 rounded-xl">
-                  <div className="text-xs sm:text-sm lg:text-base xl:text-xl">
-                    MINUTES
-                  </div>
-                  <div
-                    id="time-mins"
-                    className="font-Merriweather text-4xl sm:text-5xl lg:text-7xl xl:text-9xl"
-                  >
-                    &nbsp;
-                  </div>
-                </div>
-                <div className="bg-[#1F3139] shadow-2xl shadow-black p-2 sm:p-4 rounded-xl">
-                  <div className="text-xs sm:text-sm lg:text-base xl:text-xl">
-                    SECONDS
-                  </div>
-                  <div
-                    id="time-secs"
-                    className="font-Merriweather text-4xl sm:text-5xl lg:text-7xl xl:text-9xl"
-                  >
-                    &nbsp;
-                  </div>
-                </div>
-              </div>
-
-              <div id="intro-section" className="mt-14 ml-5">
-                <Link href="/wallet">
-                  <a className="py-2 px-5 bg-white text-lit-dark rounded-full font-Poppins font-medium text-xl sm:bg-opacity-90 hover:bg-opacity-100">
-                    Create your account
-                  </a>
-                </Link>
+      <div className="main-div">
+        <section>
+          {/* <Swiper
+            slidesPerView={1}
+            spaceBetween={20}
+            speed={2000}
+            loop={true}
+            autoplay={{
+              delay: 10000,
+            }}
+            grabCursor={true}
+            longSwipesRatio={0.25}
+          >
+            <SwiperSlide> */}
+          <div className="flex items-center flex-col-reverse md:flex-row">
+            <div className="flex-1 flex justify-evenly align-items flex-col md:mr-5">
+              <h1 className="mt-5 font-Merriweather text-4xl md:text-5xl leading-snug md:leading-snug">
+                The only marketplace to sell and buy Literature works as NFT’s
+              </h1>
+              <div className="w-full mt-5">
+                <button
+                  className={`${styles.bannerBtn} font-Poppins bg-lit-dark text-white font-semibold rounded-md px-5 py-3`}
+                >
+                  Explore Now!&nbsp;&nbsp;&nbsp;&nbsp;
+                  <span className="arrow-animate">
+                    <FontAwesomeIcon
+                      className="w-2 inline opacity-50"
+                      icon={faChevronRight}
+                    />
+                    &nbsp;&nbsp;
+                    <FontAwesomeIcon
+                      className="w-2 inline opacity-0"
+                      icon={faChevronRight}
+                    />
+                  </span>
+                </button>
               </div>
             </div>
-
-            <div className="flex-2 hidden md:flex justify-around max-w-xs md:max-w-none">
+            <div className="flex-1 flex justify-around max-w-xs md:max-w-none">
               <Image
-                src="/banner/Lucius_Verus.png"
-                alt="Lucius Verus"
-                height="577px"
-                width="428px"
-                loading="eager"
+                src="/banner/Marcus_Aurelius.png"
+                alt="Marcus Aurelius"
+                height="550px"
+                width="450px"
               />
             </div>
           </div>
+          {/* </SwiperSlide>
+          </Swiper> */}
+        </section>
 
-          <div id="switch-darkmode" className="absolute bottom-48 w-full"></div>
+        <section className="py-20">
+          <h2 className="font-Merriweather text-2xl">
+            Create and sell your NFTs
+          </h2>
 
-          <div className="absolute -bottom-3 w-full">
-            <div className="relative flex justify-center">
-              <div className="hover:cursor-grab" onMouseDown={handleMouseDown}>
-                <Image
-                  src="/vectors/union.png"
-                  alt=""
-                  draggable={false}
-                  aria-hidden
-                  height={100}
-                  width={280}
-                />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 mt-10">
+            {steps.map((step, i) => (
+              <div key={`step${i}`}>
+                <div>
+                  <Image
+                    src={`/vectors/${step.icon}.svg`}
+                    alt={step.icon}
+                    height={50}
+                    width={50}
+                  />
+                </div>
+                <h3 className="my-4 font-Merriweather font-bold text-xl">
+                  {step.title}
+                </h3>
+                <div className="font-Poppins text-sm">{step.content}</div>
               </div>
-              <div className="pointer-events-none absolute inset-0 -bottom-2 left-1 flex items-center justify-center text-lit-dark font-OpenSans font-semibold">
-                Drag to Learn More
-              </div>
-            </div>
+            ))}
           </div>
         </section>
-      </div>
 
-      <div className="main-div pb-24">
-        <section
-          id="slides-section"
-          className="flex items-center"
-          style={{ height: `calc(100vh - 6rem)` }}
-        >
-          <div className="flex items-center font-OpenSans w-full">
-            <div className="flex-3 mt-10 md:mt-0 w-40 lg:w-96 xl:w-[30rem]">
-              <Swiper
-                slidesPerView={1}
-                spaceBetween={20}
-                speed={1000}
-                autoplay={{
-                  delay: 10000,
-                }}
-                loop
-                grabCursor
-                longSwipesRatio={0.25}
+        <section className="py-20 flex flex-col sm:flex-row gap-x-10 gap-y-10">
+          <div className="flex-1 font-Merriweather text-3xl">
+            <b>Resources</b> for getting started
+          </div>
+
+          <div className="flex-3 flex gap-10 flex-col sm:flex-row items-center flex-wrap justify-center">
+            {resources.map((resource, i) => (
+              <div
+                className="flex-1 min-w-[135px] max-w-[280px]"
+                key={`resource${i}`}
               >
-                {/* slide 1 */}
-                <SwiperSlide>
-                  <div className="px-1">
-                    <h2 className="text-5xl sm:text-6xl font-bold">
-                      What is this about?
-                    </h2>
-                    <h3 className="mt-10 font-Roboto text-xl">
-                      Mi Amour is an exclusive event conducted by
-                      Cryptoliterature for the <b>writers inside you</b>. This
-                      is your chance to write and publish your favorite piece of
-                      work, be it an article, poem, story or anything that you
-                      are passionate about.
-                    </h3>
-                  </div>
-
-                  <div className="flex mt-14 sm:mt-20">
-                    <div className="font-Merriweather text-4xl flex tracking-tighter">
-                      01/<div className="text-xl ml-1">03</div>
-                    </div>
-
-                    <div className="ml-16 flex items-center gap-x-2">
-                      <SlidePrevButton disabled />
-                      <SlideNextButton />
-                    </div>
-                  </div>
-                </SwiperSlide>
-
-                {/* slide 2 */}
-                <SwiperSlide>
-                  <div className="px-1">
-                    <h2 className="text-5xl sm:text-6xl font-bold">
-                      What&apos;s the catch?
-                    </h2>
-                    <h3 className="mt-10 font-Roboto text-xl">
-                      Well well well, we definitely have something exciting for
-                      you! The winners will be awarded with one of the hottest
-                      currencies in the world, <b>Bitcoin</b>.
-                      <br />
-                      Yes you read that right. This is your chance to write and
-                      win big
-                    </h3>
-                  </div>
-
-                  <div className="flex mt-14 sm:mt-20">
-                    <div className="font-Merriweather text-4xl flex tracking-tighter">
-                      02/<div className="text-xl ml-1">03</div>
-                    </div>
-
-                    <div className="ml-16 flex items-center gap-x-2">
-                      <SlidePrevButton />
-                      <SlideNextButton />
-                    </div>
-                  </div>
-                </SwiperSlide>
-
-                {/* slide 3 */}
-                <SwiperSlide>
-                  <div className="px-1">
-                    <h2 className="text-5xl sm:text-6xl font-bold">
-                      Tell me more!!
-                    </h2>
-                    <h3 className="mt-10 font-Roboto text-xl">
-                      Calm down Amigo! The event will span from February 14th
-                      till 28th and the theme for the event is{" "}
-                      <b>‘Romantic Literature’</b>. Register from the link
-                      above, put on your romantic thinking caps and voila! you
-                      are good to go. See you on the other side!
-                    </h3>
-                  </div>
-
-                  <div className="flex mt-14 sm:mt-20">
-                    <div className="font-Merriweather text-4xl flex tracking-tighter">
-                      03/<div className="text-xl ml-1">03</div>
-                    </div>
-
-                    <div className="ml-16 flex items-center gap-x-2">
-                      <SlidePrevButton />
-                      <SlideNextButton disabled />
-                    </div>
-                  </div>
-                </SwiperSlide>
-              </Swiper>
-            </div>
-
-            <div
-              className="flex-2 hidden md:flex justify-around"
-              style={{ maxHeight: `calc(100vh - 10rem)` }}
-            >
-              <Image
-                src="/banner/Thinker.png"
-                alt="Thinker"
-                height="642px"
-                width="415px"
-              />
-            </div>
+                <div>
+                  <Image
+                    src={`/vectors/resource${i + 1}.svg`}
+                    alt={`resource${i + 1}`}
+                    height={250}
+                    width={250}
+                  />
+                </div>
+                <span className="font-Poppins text-sm font-medium">
+                  {resource}
+                </span>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -432,6 +241,55 @@ const Home: NextPage<HomePageProps> = ({ latestPost }) => {
           </div>
         </section>
       </div>
+
+      <section className="main-div py-20 text-center w-full bg-[#F8F8F8]">
+        <h3 className="font-Merriweather text-3xl">Stay in the loop</h3>
+        <p className="py-8 font-Poppins text-lg font-medium max-w-2xl mx-auto">
+          Join our mailing list to stay in the loop with our newest feature
+          releases, NFT drops, and tips and tricks for navigating
+          Cryptoliterature.
+        </p>
+        <form className="mx-0 sm:mx-20 md:mx-40">
+          <input
+            id="slug"
+            type="email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+            required
+            className="w-full max-w-2xl outline-none block font-Poppins font-medium mx-auto mb-8 py-2 px-3 rounded-md border border-lit-dark border-opacity-20 focus:shadow focus:ring-1 focus:ring-lit-dark"
+          />
+          <button
+            type="submit"
+            className="py-3 px-14 bg-lit-dark text-white rounded-md font-Poppins font-semibold"
+          >
+            Sign up
+          </button>
+        </form>
+      </section>
+
+      <section className="main-div py-20 text-center w-full">
+        <h3 className="font-Merriweather text-3xl">Join the community</h3>
+        <div className="py-8 flex justify-center gap-x-7">
+          {communities.map((community, i) => (
+            <a
+              key={`community${i}`}
+              href={community.href}
+              target="_blank"
+              className="flex p-4 rounded-xl shadow-2xl"
+              rel="noreferrer"
+            >
+              <Image
+                src={`/vectors/${community.name}.svg`}
+                alt={community.name}
+                height={40}
+                width={40}
+              />
+            </a>
+          ))}
+        </div>
+      </section>
     </main>
   );
 };
