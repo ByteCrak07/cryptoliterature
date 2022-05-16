@@ -37,9 +37,8 @@ const Onboarding: FC<OnboardingProps> = ({ close }) => {
       setIsFinishDisabled(true);
       // api call to create user
 
-      let data;
       try {
-        data = await createUser(
+        let data = await createUser(
           user as string,
           getCookie("signature") as string,
           userName,
@@ -48,6 +47,15 @@ const Onboarding: FC<OnboardingProps> = ({ close }) => {
           isWriter,
           isCollector
         );
+
+        if (data) {
+          const { accessToken, ...newUserData } = data;
+          setUserData(newUserData);
+          setIsFinishDisabled(false);
+          router.push(`/${userName}`);
+          router.reload();
+          close();
+        }
       } catch (e) {
         if (String(e) === "Error: username already exists")
           showToast("This username already exists");
@@ -56,14 +64,6 @@ const Onboarding: FC<OnboardingProps> = ({ close }) => {
           showToast("Provide a valid email");
 
         setIsFinishDisabled(false);
-      }
-
-      if (data) {
-        const { accessToken, ...newUserData } = data;
-        setUserData(newUserData);
-        setIsFinishDisabled(false);
-        router.push(`/${userName}`);
-        close();
       }
     } else showToast("Provide us your Username");
   };

@@ -281,7 +281,7 @@ const Profile: NextPage<ProfileProps> = ({ serverUserData }) => {
                         {`${pageUserData.walletKey.substring(
                           0,
                           4
-                        )}.......${pageUserData.walletKey.substring(36, 42)}`}
+                        )}.......${pageUserData.walletKey.substring(37, 42)}`}
                       </span>
                       <span className="ml-2 inline-block">
                         <svg

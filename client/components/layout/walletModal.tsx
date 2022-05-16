@@ -80,7 +80,8 @@ const WalletModal: FC<WalletModalProps> = ({ close }) => {
           close();
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        showToast("Unlock your wallet to connect");
         setSignBtnDisabled(false);
       });
   };
