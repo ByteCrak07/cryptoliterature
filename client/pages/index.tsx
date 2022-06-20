@@ -74,9 +74,18 @@ const Home: NextPage<HomePageProps> = ({ latestPost }) => {
   ];
 
   const resources = [
-    "This is how you easily setup your metamask wallet",
-    "This is how you add funds to your wallets",
-    "Things to consider before buying an NFT",
+    {
+      title: "This is how you easily setup your metamask wallet",
+      link: "https://www.coindesk.com/learn/how-to-set-up-a-metamask-wallet",
+    },
+    {
+      title: "This is how you add funds to your wallets",
+      link: "https://www.alphr.com/add-funds-metamask",
+    },
+    {
+      title: "Things to consider before buying an NFT",
+      link: "https://coinmarketcap.com/alexandria/article/9-things-to-consider-before-buying-your-first-nft",
+    },
   ];
 
   const communities = [
@@ -180,9 +189,12 @@ const Home: NextPage<HomePageProps> = ({ latestPost }) => {
 
           <div className="flex-3 flex gap-10 flex-col sm:flex-row items-center flex-wrap justify-center">
             {resources.map((resource, i) => (
-              <div
-                className="flex-1 min-w-[135px] max-w-[280px]"
+              <a
+                href={resource.link}
+                target="_blank"
+                className="block flex-1 min-w-[135px] max-w-[280px]"
                 key={`resource${i}`}
+                rel="noreferrer"
               >
                 <div>
                   <Image
@@ -193,9 +205,9 @@ const Home: NextPage<HomePageProps> = ({ latestPost }) => {
                   />
                 </div>
                 <span className="font-Poppins text-sm font-medium">
-                  {resource}
+                  {resource.title}
                 </span>
-              </div>
+              </a>
             ))}
           </div>
         </section>
