@@ -20,22 +20,23 @@ import styles from "../styles/Home.module.css";
 import ComingSoon from "../components/general/coming-soon";
 import { getPosts } from "../lib/ghost/posts";
 import { GhostPost } from "../interfaces/posts";
+import IframeModal from "../components/layout/iframeModal";
 
-export const getStaticProps: GetStaticProps = async () => {
-  const posts = await getPosts();
+// export const getStaticProps: GetStaticProps = async () => {
+//   const posts = await getPosts();
 
-  if (!posts) {
-    return {
-      notFound: true,
-      revalidate: 600,
-    };
-  }
+//   if (!posts) {
+//     return {
+//       notFound: true,
+//       revalidate: 600,
+//     };
+//   }
 
-  return {
-    props: { latestPost: posts[0] },
-    revalidate: 600,
-  };
-};
+//   return {
+//     props: { latestPost: posts[0] },
+//     revalidate: 600,
+//   };
+// };
 
 interface HomePageProps {
   latestPost: GhostPost;
@@ -45,6 +46,7 @@ SwiperCore.use([Autoplay]);
 
 const Home: NextPage<HomePageProps> = ({ latestPost }) => {
   const [email, setEmail] = useState("");
+  const [isIframeModalOpen, setIsIframeModalOpen] = useState(false);
 
   const steps = [
     {
@@ -106,7 +108,11 @@ const Home: NextPage<HomePageProps> = ({ latestPost }) => {
         path="/"
       />
 
-      <div className="main-div">
+      <div className="main-div relative">
+        {isIframeModalOpen ? (
+          <IframeModal close={() => setIsIframeModalOpen(false)} />
+        ) : null}
+
         <section>
           {/* <Swiper
             slidesPerView={1}
@@ -128,8 +134,9 @@ const Home: NextPage<HomePageProps> = ({ latestPost }) => {
               <div className="w-full mt-5">
                 <button
                   className={`${styles.bannerBtn} font-Poppins bg-lit-dark text-white font-semibold rounded-md px-5 py-3`}
+                  onClick={() => setIsIframeModalOpen(true)}
                 >
-                  Explore Now!&nbsp;&nbsp;&nbsp;&nbsp;
+                  Join Beta&nbsp;&nbsp;&nbsp;&nbsp;
                   <span className="arrow-animate">
                     <FontAwesomeIcon
                       className="w-2 inline opacity-50"
@@ -212,7 +219,7 @@ const Home: NextPage<HomePageProps> = ({ latestPost }) => {
           </div>
         </section>
 
-        <section className="py-32">
+        {/* <section className="py-32">
           <div className="flex items-baseline">
             <h1 className="font-Poppins font-semibold text-2xl">Latest Blog</h1>
             <Link href="/blogs">
@@ -251,7 +258,7 @@ const Home: NextPage<HomePageProps> = ({ latestPost }) => {
               time={latestPost.published_at}
             />
           </div>
-        </section>
+        </section> */}
       </div>
 
       <section className="main-div py-20 text-center w-full bg-[#F8F8F8]">

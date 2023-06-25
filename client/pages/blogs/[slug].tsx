@@ -15,28 +15,34 @@ import { GhostPost } from "../../interfaces/posts";
 import { getSinglePost, getPosts } from "../../lib/ghost/posts";
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const posts = await getPosts();
+  // const posts = await getPosts();
 
-  const paths = posts.map((post: { slug: string }) => ({
-    params: { slug: post.slug },
-  }));
+  // const paths = posts.map((post: { slug: string }) => ({
+  //   params: { slug: post.slug },
+  // }));
 
-  return { paths, fallback: true };
+  // return { paths, fallback: true };
+
+  return { paths: [], fallback: false };
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const post = await getSinglePost(context.params?.slug);
+  // const post = await getSinglePost(context.params?.slug);
 
-  if (!post) {
-    return {
-      notFound: true,
-      revalidate: 600,
-    };
-  }
+  // if (!post) {
+  //   return {
+  //     notFound: true,
+  //     revalidate: 600,
+  //   };
+  // }
+
+  // return {
+  //   props: { post },
+  //   revalidate: 600,
+  // };
 
   return {
-    props: { post },
-    revalidate: 600,
+    notFound: true,
   };
 };
 

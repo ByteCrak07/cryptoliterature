@@ -8,18 +8,22 @@ import { GhostPost } from "../../interfaces/posts";
 import { getPosts } from "../../lib/ghost/posts";
 
 export const getStaticProps: GetStaticProps = async () => {
-  const posts = await getPosts();
+  // const posts = await getPosts();
 
-  if (!posts) {
-    return {
-      notFound: true,
-      revalidate: 600,
-    };
-  }
+  // if (!posts) {
+  //   return {
+  //     notFound: true,
+  //     revalidate: 600,
+  //   };
+  // }
+
+  // return {
+  //   props: { posts },
+  //   revalidate: 600,
+  // };
 
   return {
-    props: { posts },
-    revalidate: 600,
+    notFound: true,
   };
 };
 
