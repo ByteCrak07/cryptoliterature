@@ -24,9 +24,9 @@ const PublishedPosts: FC<{ walletKey: string }> = ({ walletKey }) => {
     <>
       {!isLoading ? (
         <>
-          {data.length !== 0 ? (
+          {data?.length !== 0 ? (
             <>
-              {data.map((post, i) => (
+              {data?.map((post, i) => (
                 <Link key={`publishedPost${i}`} href={`/post/${post.slug}`}>
                   <a>
                     <Card

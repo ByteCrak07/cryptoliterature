@@ -26,8 +26,8 @@ module.exports = {
       "blog.cryptoliterature.in",
       "expertphotography.b-cdn.net",
       "avatars.dicebear.com",
-      "cryptoliterature.s3.ap-south-1.amazonaws.com",
-      "cryptoliterature.s3.amazonaws.com",
+      "cryptolit-bucket.s3.ap-south-1.amazonaws.com",
+      "cryptolit-bucket.s3.amazonaws.com"
     ],
   },
 

@@ -1,4 +1,4 @@
-import { MetaMaskInpageProvider } from "@metamask/providers";
+import { MetaMaskInpageProvider } from '@metamask/providers';
 
 declare global {
   interface Window {
@@ -8,7 +8,8 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       SITE_URL: string;
-      API_URL: string;
+      NEXT_PUBLIC_API_URL: string;
+      NEXT_PUBLIC_CLIENT_AUTH_KEY: string;
       GHOST_URL: string;
       GHOST_CONTENT_API_KEY: string;
     }

@@ -434,15 +434,17 @@ const EditPost: NextPage<EditPostProps> = ({ post }) => {
           </section>
 
           <div className="font-Poppins font-medium text-lg mb-3">Content</div>
-          <CKEditor
-            data={content.current}
-            onBlur={handleAutoSave}
-            onChange={(_, editor) => {
-              if (!contentChanged) setContentChanged(true);
-              const data = editor.getData();
-              content.current = data;
-            }}
-          />
+          <div className="mb-20">
+            <CKEditor
+              data={content.current}
+              onBlur={handleAutoSave}
+              onChange={(_, editor) => {
+                if (!contentChanged) setContentChanged(true);
+                const data = editor.getData();
+                content.current = data;
+              }}
+            />
+          </div>
 
           {/* img crop modal */}
           {showCropModal ? (

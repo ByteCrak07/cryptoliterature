@@ -24,9 +24,9 @@ const ArchivedPosts: FC<{ walletKey: string }> = ({ walletKey }) => {
     <>
       {!isLoading ? (
         <>
-          {data.length !== 0 ? (
+          {data?.length !== 0 ? (
             <>
-              {data.map((post, i) => (
+              {data?.map((post, i) => (
                 <Link
                   key={`archivedPost${i}`}
                   href={`/post/${post.slug}?key=${window.ethereum?.selectedAddress}`}

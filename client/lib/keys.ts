@@ -1,4 +1,2 @@
-// export const ApiUrl = "https://api.cryptoliterature.in";
-export const ApiUrl = "https://cryptolit-api.herokuapp.com";
-// export const ApiUrl = "http://localhost:5000";
-export const ClientAuthKey = "lXIQo9ntcoAcMsCqQIEqes5YPF5DJ";
+export const ApiUrl = process.env.NEXT_PUBLIC_API_URL;
+export const ClientAuthKey = process.env.NEXT_PUBLIC_CLIENT_AUTH_KEY;
